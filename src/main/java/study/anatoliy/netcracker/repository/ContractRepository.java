@@ -8,7 +8,7 @@ import java.util.Comparator;
 
 public class ContractRepository {
 
-    private static final Comparator<Contract> comparator = Comparator.comparingLong(Contract::getID);
+    private static final Comparator<Contract> comparator = Comparator.comparingLong(Contract::getId);
 
     private Contract[] contracts;
     private int size;
@@ -24,7 +24,7 @@ public class ContractRepository {
     }
 
     public void add(Contract contract) throws ContractAlreadyExistsException {
-        checkIdCollision(contract.getID());
+        checkIdCollision(contract.getId());
         ensureCapacityInternal(size + 1);
         contracts[size++] = contract;
         checkIsSorted(size-1);
@@ -33,7 +33,7 @@ public class ContractRepository {
     public void addAll(Collection<Contract> c) throws ContractAlreadyExistsException {
         for (Contract contract :
                 c) {
-            checkIdCollision(contract.getID());
+            checkIdCollision(contract.getId());
         }
         Contract[] src = c.toArray(new Contract[0]);
         ensureCapacityInternal(size + c.size());
@@ -105,7 +105,7 @@ public class ContractRepository {
         while (low <= high) {
             int mid = (low + high) >>> 1;
             Contract midContact = contracts[mid];
-            int cmp = Long.compare(midContact.getID(), id);
+            int cmp = Long.compare(midContact.getId(), id);
             if (cmp < 0)
                 low = mid + 1;
             else if (cmp > 0)
