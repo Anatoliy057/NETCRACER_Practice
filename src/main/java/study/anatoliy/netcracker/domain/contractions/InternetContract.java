@@ -1,6 +1,6 @@
 package study.anatoliy.netcracker.domain.contractions;
 
-import study.anatoliy.netcracker.client.Client;
+import study.anatoliy.netcracker.domain.client.Client;
 
 import java.time.LocalDate;
 

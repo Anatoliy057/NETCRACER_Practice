@@ -1,4 +1,4 @@
-package study.anatoliy.netcracker.client;
+package study.anatoliy.netcracker.domain.client;
 
 import java.time.LocalDate;
 
