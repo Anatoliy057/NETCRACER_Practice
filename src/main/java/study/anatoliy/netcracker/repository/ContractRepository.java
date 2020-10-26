@@ -2,7 +2,6 @@ package study.anatoliy.netcracker.repository;
 
 import study.anatoliy.netcracker.domain.contractions.Contract;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -24,13 +23,18 @@ public class ContractRepository {
         this(8);
     }
 
-    public void add(Contract contract) {
+    public void add(Contract contract) throws ContractAlreadyExistsException {
+        checkIdCollision(contract.getID());
         ensureCapacityInternal(size + 1);
         contracts[size++] = contract;
         checkIsSorted(size-1);
     }
 
-    public void addAll(Collection<Contract> c) {
+    public void addAll(Collection<Contract> c) throws ContractAlreadyExistsException {
+        for (Contract contract :
+                c) {
+            checkIdCollision(contract.getID());
+        }
         Contract[] src = c.toArray(new Contract[0]);
         ensureCapacityInternal(size + c.size());
         System.arraycopy(src, 0, contracts, size, src.length);
@@ -124,4 +128,12 @@ public class ContractRepository {
         return contract;
     }
 
+    private void checkIdCollision(long id) throws ContractAlreadyExistsException {
+        if (!isSorted) {
+            sort();
+        }
+        if (searchById(id) >= 0) {
+            throw new ContractAlreadyExistsException(id);
+        }
+    }
 }

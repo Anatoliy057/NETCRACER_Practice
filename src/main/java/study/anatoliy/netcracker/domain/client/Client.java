@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Client {
 
-    private final long ID;
+    private final long id;
     private final LocalDate birthDate;
 
     private String fullName;
@@ -12,7 +12,7 @@ public class Client {
     private Gender gender;
 
     public Client(long id, LocalDate birthDate, String fullName, String passport, Gender gender) {
-        ID = id;
+        this.id = id;
         this.birthDate = birthDate;
         this.fullName = fullName;
         this.passport = passport;
@@ -23,8 +23,8 @@ public class Client {
         return LocalDate.now().minusYears(birthDate.getYear()).getYear();
     }
 
-    public long getID() {
-        return ID;
+    public long getId() {
+        return id;
     }
 
     public LocalDate getBirthDate() {
