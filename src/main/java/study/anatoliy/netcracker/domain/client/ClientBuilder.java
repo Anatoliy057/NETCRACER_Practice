@@ -1,5 +1,7 @@
 package study.anatoliy.netcracker.domain.client;
 
+import study.anatoliy.netcracker.domain.exception.PeriodException;
+
 import java.time.LocalDate;
 
 public class ClientBuilder {
@@ -35,7 +37,7 @@ public class ClientBuilder {
         return this;
     }
 
-    public Client build() {
+    public Client build() throws PeriodException {
         return new Client(id, birthDate, fullName, passport, gender);
     }
 }

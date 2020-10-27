@@ -1,6 +1,10 @@
 package study.anatoliy.netcracker.domain.client;
 
+import study.anatoliy.netcracker.domain.exception.PeriodException;
+import study.anatoliy.netcracker.util.Checks;
+
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Client {
 
@@ -11,12 +15,16 @@ public class Client {
     private String passport;
     private Gender gender;
 
-    public Client(long id, LocalDate birthDate, String fullName, String passport, Gender gender) {
+    public Client(long id, LocalDate birthDate, String fullName, String passport, Gender gender) throws PeriodException {
+        if (id < 0) {
+            throw new IllegalArgumentException("ID can not be negative: " + id);
+        }
         this.id = id;
-        this.birthDate = birthDate;
-        this.fullName = fullName;
-        this.passport = passport;
-        this.gender = gender;
+        this.birthDate = Objects.requireNonNull(birthDate);
+        this.fullName = Objects.requireNonNull(fullName);
+        this.passport = Objects.requireNonNull(passport);
+        this.gender = Objects.requireNonNull(gender);
+        checkBirth();
     }
 
     public int getAge() {
@@ -53,5 +61,9 @@ public class Client {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    private void checkBirth() throws PeriodException {
+        Checks.periodMoreZero(birthDate, LocalDate.now(), "Client cannot be born later than current date");
     }
 }

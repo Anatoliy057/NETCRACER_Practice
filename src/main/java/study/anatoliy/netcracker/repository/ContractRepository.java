@@ -46,7 +46,8 @@ public class ContractRepository {
         if (!isSorted) {
             sort();
         }
-        return contracts[searchById(id)];
+        int index = searchById(id);
+        return index < 0 ? null : contracts[searchById(id)];
     }
 
     public Contract removeById(long id) {
