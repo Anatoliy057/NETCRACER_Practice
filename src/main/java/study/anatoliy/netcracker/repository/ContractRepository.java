@@ -7,6 +7,7 @@ import study.anatoliy.netcracker.util.Checks;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Repository of various contracts
@@ -81,39 +82,43 @@ public class ContractRepository {
 
     /**
      * @param id ID of the contract we are looking for
-     * @return contract with the specified id, if not found will return null
+     * @return optional contract with the specified id
      *
      * @see ContractRepository#sort()
-     * @see ContractRepository#searchById(long)
+     * @see ContractRepository#getIndex(long)
      */
-    public Contract getByID(long id) {
-        if (!isSorted) {
-            sort();
-        }
-        int index = searchById(id);
-        return index < 0 ? null : contracts[searchById(id)];
+    public Optional<Contract> getByID(long id) {
+        int index = getIndex(id);
+        return index < 0 ? Optional.empty() : Optional.of(contracts[searchById(id)]);
     }
 
     /**
      * @param id ID of the contract to be deleted
-     * @return Returns the deleted contract, if not found, return null
+     * @return the optional deleted contract
      *
      * @see ContractRepository#sort()
-     * @see ContractRepository#searchById(long)
+     * @see ContractRepository#getIndex(long)
      */
-    public Contract removeById(long id) {
+    public Optional<Contract> removeById(long id) {
+        int index = getIndex(id);
+        if (index < 0) {
+            return Optional.empty();
+        }
+        return Optional.of(remove(index));
+    }
+
+    /**
+     * Before binary sorting, checks if the array is sorted,
+     * in case of false - sorts
+     *
+     * @param id ID of the contract we are looking for
+     * @return index of contract, if not found will return -1
+     */
+    private int getIndex(long id) {
         if (!isSorted) {
             sort();
         }
-        int index = searchById(id);
-        if (index < 0) {
-            return null;
-        }
-        return remove(index);
-    }
-
-    public int size() {
-        return size;
+        return searchById(id);
     }
 
     /**
@@ -220,14 +225,17 @@ public class ContractRepository {
      * @throws ContractAlreadyExistsException if a contract with the specified id already exists
      *
      * @see ContractRepository#sort()
+     * @see ContractRepository#getIndex(long)
      */
     private void checkIdCollision(long id) throws ContractAlreadyExistsException {
-        if (!isSorted) {
-            sort();
-        }
-        if (searchById(id) >= 0) {
+        int index = getIndex(id);
+        if (index >= 0) {
             throw new ContractAlreadyExistsException(id);
         }
+    }
+
+    public int size() {
+        return size;
     }
 
     @Override

@@ -9,6 +9,7 @@ import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -114,9 +115,7 @@ class ContractRepositoryTest {
         ContractRepository repo = new ContractRepository();
         repo.add(internetContract);
 
-        assertThrows(ContractAlreadyExistsException.class, () ->  {
-            repo.addAll(Arrays.asList(internetContract, mobileContract, digitalTVContract));
-        });
+        assertThrows(ContractAlreadyExistsException.class, () -> repo.addAll(Arrays.asList(internetContract, mobileContract, digitalTVContract)));
     }
 
     @Test
@@ -126,7 +125,7 @@ class ContractRepositoryTest {
         repo.add(internetContract);
         repo.add(mobileContract);
 
-        Contract contract = repo.getByID(1);
+        Contract contract = repo.getByID(1).orElse(null);
 
         assertEquals(mobileContract, contract);
     }
@@ -137,9 +136,9 @@ class ContractRepositoryTest {
         repo.add(digitalTVContract);
         repo.add(internetContract);
 
-        Contract contract = repo.getByID(1);
+        Optional<Contract> contract = repo.getByID(1);
 
-        assertNull(contract);
+        assertFalse(contract.isPresent());
     }
 
     @Test
@@ -149,7 +148,7 @@ class ContractRepositoryTest {
         repo.add(internetContract);
         repo.add(mobileContract);
 
-        Contract contract = repo.removeById(0);
+        Contract contract = repo.removeById(0).orElse(null);
 
         assertEquals(internetContract, contract);
         assertEquals(2, repo.size());
@@ -162,9 +161,9 @@ class ContractRepositoryTest {
         repo.add(internetContract);
         repo.add(mobileContract);
 
-        Contract contract = repo.removeById(10);
+        Optional<Contract> contract = repo.removeById(10);
 
-        assertNull(contract);
+        assertFalse(contract.isPresent());
         assertEquals(3, repo.size());
     }
 
