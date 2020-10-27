@@ -5,6 +5,12 @@ import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
 
+/**
+ * Wired Internet Contract builder
+ *
+ * @see InternetContract
+ * @author Udarczev Anatoliy
+ */
 public class InternetContractBuilder {
 
     private int megabits;

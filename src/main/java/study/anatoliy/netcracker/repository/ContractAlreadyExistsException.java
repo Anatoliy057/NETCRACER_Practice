@@ -1,5 +1,17 @@
 package study.anatoliy.netcracker.repository;
 
+import study.anatoliy.netcracker.domain.contractions.Contract;
+
+import java.util.Collection;
+
+/**
+ * ContractAlreadyExistsException throw when the contract with the specified id already exists
+ * and you cannot add a new one with the same id
+ *
+ * @see ContractRepository#add(Contract)
+ * @see ContractRepository#addAll(Collection)
+ * @author Udarczev Anatoliy
+ */
 public class ContractAlreadyExistsException extends Exception {
 
     public ContractAlreadyExistsException(long id) {

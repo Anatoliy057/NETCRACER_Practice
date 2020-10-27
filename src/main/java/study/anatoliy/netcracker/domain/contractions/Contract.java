@@ -7,16 +7,34 @@ import study.anatoliy.netcracker.util.Checks;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Abstract entity of the contract
+ *
+ * @author Udarczev Anatoliy
+ */
 public abstract class Contract {
 
+    /** ID of contract */
     protected final long id;
 
+    /** Start date of the contract */
     protected final LocalDate startDate;
+    /**
+     * Contract end date.
+     * * If null then the contract is unlimited.
+     */
     protected LocalDate expirationDate;
 
+    /** The client with whom the contract was signed */
     protected final Client client;
 
-    public Contract(long id, LocalDate startDate, LocalDate expirationDate, Client client) throws PeriodException {
+    /**
+     * @throws PeriodException if the start date of the contract is later than its end
+     * @throws PeriodException if the client's date of birth is later than the start of the contract
+     * @throws IllegalArgumentException if id of contract < 0
+     * @throws NullPointerException if one of the parameters (other than expirationDate) is null
+     */
+    protected Contract(long id, LocalDate startDate, LocalDate expirationDate, Client client) throws PeriodException {
         Checks.numberIsPositive(id, "ID can not be negative");
         this.id = id;
         this.startDate = Objects.requireNonNull(startDate);
@@ -26,6 +44,11 @@ public abstract class Contract {
         checkBirthClient();
     }
 
+    /**
+     *
+     * @return type of contract
+     * @see TypeContract
+     */
     public abstract TypeContract getType();
 
     public long getId() {

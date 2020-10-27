@@ -6,10 +6,22 @@ import study.anatoliy.netcracker.domain.exception.PeriodException;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Digital television contract entity class
+ * @author Udarczev Anatoliy
+ * @see Contract
+ */
 public class DigitalTVContract extends Contract {
 
+    /**
+     * Channel package type
+     * @see ChannelPackage
+     */
     private ChannelPackage channelPackage;
 
+    /**
+     * @see Contract#Contract(long, LocalDate, LocalDate, Client)
+     */
     public DigitalTVContract(long ID, LocalDate startDate, LocalDate expirationDate, Client client, ChannelPackage channelPackage) throws PeriodException {
         super(ID, startDate, expirationDate, client);
         this.channelPackage = Objects.requireNonNull(channelPackage);

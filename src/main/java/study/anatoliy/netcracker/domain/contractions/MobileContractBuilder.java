@@ -5,6 +5,12 @@ import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
 
+/**
+ * Mobile communication contract builder
+ *
+ * @see MobileContract
+ * @author Udarczev Anatoliy
+ */
 public class MobileContractBuilder {
 
     private int minutes;

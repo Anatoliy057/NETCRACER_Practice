@@ -5,6 +5,12 @@ import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
 
+/**
+ * Digital television contract builder
+ *
+ * @see DigitalTVContract
+ * @author Udarczev Anatoliy
+ */
 public class DigitalTVContractBuilder {
 
     private ChannelPackage channelPackage;

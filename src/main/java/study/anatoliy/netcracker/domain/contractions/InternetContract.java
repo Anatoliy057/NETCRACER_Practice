@@ -7,10 +7,21 @@ import study.anatoliy.netcracker.util.Checks;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Wired Internet Contract Entity Class
+ *
+ * @see Contract
+ * @author Udarczev Anatoliy
+ */
 public class InternetContract extends Contract {
 
+    /** Wired internet speed at Mbits */
     private int megabits;
 
+    /**
+     * @throws IllegalArgumentException if megabits < 0
+     * @see Contract#Contract(long, LocalDate, LocalDate, Client)
+     */
     public InternetContract(long ID, LocalDate startDate, LocalDate expirationDate, Client client, int megabits) throws PeriodException {
         super(ID, startDate, expirationDate, client);
         Checks.numberIsPositive(megabits, "Internet speed cannot be negative");

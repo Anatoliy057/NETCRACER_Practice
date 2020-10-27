@@ -6,15 +6,30 @@ import study.anatoliy.netcracker.util.Checks;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Client entity class
+ *
+ * @author Udarczev Anatoliy
+ */
 public class Client {
 
+    /** ID of client */
     private final long id;
+    /** Birthday */
     private final LocalDate birthDate;
 
+    /** Contains first name, last name, [patronymic] */
     private String fullName;
+    /** Passport series and number */
     private String passport;
+    /** Client gender */
     private Gender gender;
 
+    /**
+     * @throws PeriodException if the client's date of birth is later than the current date
+     * @throws IllegalArgumentException if id of client < 0
+     * @throws NullPointerException if one of the parameters is null
+     */
     public Client(long id, LocalDate birthDate, String fullName, String passport, Gender gender) throws PeriodException {
         if (id < 0) {
             throw new IllegalArgumentException("ID can not be negative: " + id);
@@ -27,6 +42,10 @@ public class Client {
         checkBirth();
     }
 
+
+    /**
+     * @return the current age of the client
+     */
     public int getAge() {
         return LocalDate.now().minusYears(birthDate.getYear()).getYear();
     }

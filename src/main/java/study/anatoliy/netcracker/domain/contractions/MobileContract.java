@@ -7,12 +7,24 @@ import study.anatoliy.netcracker.util.Checks;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Mobile communication contract entity class
+ *
+ * @see Contract
+ * @author Udarczev Anatoliy
+ */
 public class MobileContract extends Contract {
 
+    /** Number of available call minutes */
     private int minutes;
+    /** Number of available SMS */
     private int sms;
+    /** Number of available Internet traffic in megabytes */
     private int megabytes;
 
+    /**
+     * @throws IllegalArgumentException if one of: minutes, sms, megabytes < 0
+     */
     public MobileContract(long ID, LocalDate startDate, LocalDate expirationDate, Client client, int minutes, int sms, int megabytes) throws PeriodException {
         super(ID, startDate, expirationDate, client);
         Checks.numberIsPositive(minutes, "The number of minutes cannot be negative");

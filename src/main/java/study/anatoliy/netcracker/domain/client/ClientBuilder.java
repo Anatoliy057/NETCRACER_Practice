@@ -4,6 +4,12 @@ import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
 
+/**
+ * Client builder
+ *
+ * @see Client
+ * @author Udarczev Anatoliy
+ */
 public class ClientBuilder {
 
     private long id;
