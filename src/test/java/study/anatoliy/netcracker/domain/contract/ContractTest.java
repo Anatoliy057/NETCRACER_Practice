@@ -1,4 +1,4 @@
-package study.anatoliy.netcracker.domain.contractions;
+package study.anatoliy.netcracker.domain.contract;
 
 import org.junit.jupiter.api.Test;
 import study.anatoliy.netcracker.domain.client.Client;

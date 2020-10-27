@@ -1,6 +1,6 @@
 package study.anatoliy.netcracker.repository;
 
-import study.anatoliy.netcracker.domain.contractions.Contract;
+import study.anatoliy.netcracker.domain.contract.Contract;
 
 import java.util.Collection;
 

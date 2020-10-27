@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import study.anatoliy.netcracker.domain.client.Client;
 import study.anatoliy.netcracker.domain.client.ClientBuilder;
 import study.anatoliy.netcracker.domain.client.Gender;
-import study.anatoliy.netcracker.domain.contractions.*;
+import study.anatoliy.netcracker.domain.contract.*;
 import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;

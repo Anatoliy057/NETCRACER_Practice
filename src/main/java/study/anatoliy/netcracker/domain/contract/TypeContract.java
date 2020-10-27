@@ -1,4 +1,4 @@
-package study.anatoliy.netcracker.domain.contractions;
+package study.anatoliy.netcracker.domain.contract;
 
 /**
  * List of possible contracts

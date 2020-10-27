@@ -1,6 +1,6 @@
 package study.anatoliy.netcracker.domain.exception;
 
-import study.anatoliy.netcracker.domain.contractions.Contract;
+import study.anatoliy.netcracker.domain.contract.Contract;
 import study.anatoliy.netcracker.domain.client.Client;
 
 import java.time.LocalDate;

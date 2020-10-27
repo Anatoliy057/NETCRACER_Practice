@@ -1,7 +1,7 @@
 package study.anatoliy.netcracker.repository;
 
-import study.anatoliy.netcracker.domain.contractions.Contract;
-import study.anatoliy.netcracker.domain.contractions.TypeContract;
+import study.anatoliy.netcracker.domain.contract.Contract;
+import study.anatoliy.netcracker.domain.contract.TypeContract;
 import study.anatoliy.netcracker.util.Checks;
 
 import java.util.Arrays;
