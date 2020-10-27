@@ -4,10 +4,8 @@ import study.anatoliy.netcracker.domain.contract.Contract;
 import study.anatoliy.netcracker.domain.contract.TypeContract;
 import study.anatoliy.netcracker.util.Checks;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Repository of various contracts
@@ -78,6 +76,30 @@ public class ContractRepository {
         System.arraycopy(src, 0, contracts, size, src.length);
         size += c.size();
         checkIsSorted(size-1);
+    }
+
+    /**
+     * @param predicate the condition by which contracts are filtered
+     * @return collection of contracts meeting the specified conditions
+     */
+    public Collection<Contract> getAllFilterBy(Predicate<Contract> predicate) {
+        List<Contract> filteredContracts = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            if (predicate.test(contracts[i])) {
+                filteredContracts.add(contracts[i]);
+            }
+        }
+        return filteredContracts;
+    }
+
+    /**
+     * @param comparator comparator by which contracts will be sorted
+     * @return list of contracts sorted by a given comparator
+     */
+    public List<Contract> getAllSortedBy(Comparator<Contract> comparator) {
+        List<Contract> sortedContracts = Arrays.asList(contracts);
+        sortedContracts.sort(comparator);
+        return sortedContracts;
     }
 
     /**
