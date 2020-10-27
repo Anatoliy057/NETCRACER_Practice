@@ -2,6 +2,7 @@ package study.anatoliy.netcracker.repository;
 
 import study.anatoliy.netcracker.domain.contractions.Contract;
 import study.anatoliy.netcracker.domain.contractions.TypeContract;
+import study.anatoliy.netcracker.util.Checks;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,8 +32,10 @@ public class ContractRepository {
 
     /**
      * @param capacity estimated number of stored contracts
+     * @throws IllegalArgumentException if capacity > 0
      */
     public ContractRepository(int capacity) {
+        Checks.numberIsPositive(capacity, "Capacity must be > 0");
         contracts = new Contract[capacity];
         size = 0;
         isSorted = true;
