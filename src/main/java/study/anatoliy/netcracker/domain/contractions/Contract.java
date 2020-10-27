@@ -60,6 +60,22 @@ public abstract class Contract {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Contract contract = (Contract) o;
+        return id == contract.id &&
+                startDate.equals(contract.startDate) &&
+                Objects.equals(expirationDate, contract.expirationDate) &&
+                client.equals(contract.client);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, startDate, expirationDate, client);
+    }
+
+    @Override
     public String toString() {
         return "Contract{" +
                 "id=" + id +

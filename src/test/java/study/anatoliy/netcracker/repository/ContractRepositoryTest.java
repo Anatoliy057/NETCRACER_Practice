@@ -136,7 +136,6 @@ class ContractRepositoryTest {
         ContractRepository repo = new ContractRepository();
         repo.add(digitalTVContract);
         repo.add(internetContract);
-        repo.add(mobileContract);
 
         Contract contract = repo.getByID(1);
 

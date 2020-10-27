@@ -66,4 +66,32 @@ public class Client {
     private void checkBirth() throws PeriodException {
         Checks.periodMoreZero(birthDate, LocalDate.now(), "Client cannot be born later than current date");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return id == client.id &&
+                birthDate.equals(client.birthDate) &&
+                fullName.equals(client.fullName) &&
+                passport.equals(client.passport) &&
+                gender == client.gender;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, birthDate, fullName, passport, gender);
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", birthDate=" + birthDate +
+                ", fullName='" + fullName + '\'' +
+                ", passport='" + passport + '\'' +
+                ", gender=" + gender +
+                '}';
+    }
 }

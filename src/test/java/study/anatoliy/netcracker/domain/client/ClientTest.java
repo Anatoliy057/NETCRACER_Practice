@@ -18,7 +18,7 @@ class ClientTest {
                 .setID(0)
                 .setGender(Gender.MALE)
                 .setPassport("1234 567890")
-                .setBirthDate(null)
+                .setBirthDate(birthDate)
                 .build();
         int expectAge = Period.between(birthDate, LocalDate.now()).getYears();
 

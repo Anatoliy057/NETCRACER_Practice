@@ -17,6 +17,7 @@ public class ContractRepository {
     public ContractRepository(int capacity) {
         contracts = new Contract[capacity];
         size = 0;
+        isSorted = true;
     }
 
     public ContractRepository() {
@@ -76,7 +77,9 @@ public class ContractRepository {
     }
 
     private void sort() {
-        Arrays.sort(contracts, comparator);
+        if (size != 0) {
+            Arrays.sort(contracts, comparator);
+        }
         isSorted = true;
     }
 
@@ -136,5 +139,14 @@ public class ContractRepository {
         if (searchById(id) >= 0) {
             throw new ContractAlreadyExistsException(id);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ContractRepository{" +
+                "contracts=" + Arrays.toString(contracts) +
+                ", size=" + size +
+                ", isSorted=" + isSorted +
+                '}';
     }
 }

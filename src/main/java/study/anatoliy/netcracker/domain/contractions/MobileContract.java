@@ -5,6 +5,7 @@ import study.anatoliy.netcracker.domain.exception.PeriodException;
 import study.anatoliy.netcracker.util.Checks;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class MobileContract extends Contract {
 
@@ -53,5 +54,30 @@ public class MobileContract extends Contract {
 
     public void setMegabytes(int megabytes) {
         this.megabytes = megabytes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        MobileContract that = (MobileContract) o;
+        return minutes == that.minutes &&
+                sms == that.sms &&
+                megabytes == that.megabytes;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), minutes, sms, megabytes);
+    }
+
+    @Override
+    public String toString() {
+        return "MobileContract{" +
+                "minutes=" + minutes +
+                ", sms=" + sms +
+                ", megabytes=" + megabytes +
+                "} " + super.toString();
     }
 }
