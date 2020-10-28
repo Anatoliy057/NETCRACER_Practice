@@ -8,8 +8,7 @@ import study.anatoliy.netcracker.domain.contract.*;
 import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -165,6 +164,80 @@ class ContractRepositoryTest {
 
         assertFalse(contract.isPresent());
         assertEquals(3, repo.size());
+    }
+
+    @Test
+    public void getAllFilterBy_filterMobile_returnMobileContracts() throws ContractAlreadyExistsException {
+        ContractRepository repo = new ContractRepository();
+        repo.add(digitalTVContract);
+        repo.add(internetContract);
+        repo.add(mobileContract);
+
+        Collection<Contract> filteredContracts = repo.getAllFilterBy(c -> c.getType() == TypeContract.MOBILE);
+
+        for (Contract c :
+                filteredContracts) {
+            assertEquals(c.getType(), TypeContract.MOBILE);
+        }
+    }
+
+    @Test
+    public void getAllFilterBy_filterInternet_returnInternetContracts() throws ContractAlreadyExistsException, PeriodException {
+        ContractRepository repo = new ContractRepository();
+        repo.add(digitalTVContract);
+        repo.add(internetContract);
+        repo.add(mobileContract);
+        for (int i = 4; i < 14; i++) {
+            repo.add(template.setId(i).build());
+        }
+
+        Collection<Contract> filteredContracts = repo.getAllFilterBy(c -> c.getType() == TypeContract.WIRED_INTERNET);
+
+        for (Contract c :
+                filteredContracts) {
+            assertEquals(c.getType(), TypeContract.WIRED_INTERNET);
+        }
+    }
+
+    @Test
+    public void getAllFilterBy_filterStartDate_returnDateMore2018() throws ContractAlreadyExistsException, PeriodException {
+        ContractRepository repo = new ContractRepository();
+        repo.add(digitalTVContract);
+        repo.add(internetContract);
+        repo.add(mobileContract);
+        for (int i = 4; i < 14; i++) {
+            repo.add(template.setId(i).build());
+        }
+
+        Collection<Contract> filteredContracts = repo.getAllFilterBy(c -> c.getStartDate().isAfter(LocalDate.of(2018, 12, 31)));
+
+        for (Contract c :
+                filteredContracts) {
+            assertTrue(c.getStartDate().getYear() > 2018);
+        }
+    }
+
+    @Test
+    public void getAllOrderBy_startDate_returnSortedByDate() throws ContractAlreadyExistsException, PeriodException {
+        ContractRepository repo = new ContractRepository();
+        repo.add(digitalTVContract);
+        repo.add(internetContract);
+        repo.add(mobileContract);
+        Comparator<Contract> comparatorStartDate = (c1, c2) -> {
+            if (c1.getStartDate().isAfter(c2.getStartDate())) {
+                return 1;
+            } else if (c1.getStartDate().isEqual(c2.getStartDate())) {
+                return 0;
+            } else {
+                return -1;
+            }
+        };
+
+        List<Contract> sortedContracts = repo.getAllSortedBy(comparatorStartDate);
+
+        for (int i = 0; i < sortedContracts.size()-1; i++) {
+            assertTrue(comparatorStartDate.compare(sortedContracts.get(i), sortedContracts.get(i+1)) <= 0);
+        }
     }
 
 }

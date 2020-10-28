@@ -97,7 +97,7 @@ public class ContractRepository {
      * @return list of contracts sorted by a given comparator
      */
     public List<Contract> getAllSortedBy(Comparator<Contract> comparator) {
-        List<Contract> sortedContracts = Arrays.asList(contracts);
+        List<Contract> sortedContracts = Arrays.asList(Arrays.copyOf(contracts, size));
         sortedContracts.sort(comparator);
         return sortedContracts;
     }

@@ -3,20 +3,17 @@ package study.anatoliy.netcracker.util;
 import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
-import java.time.Period;
 
 public class Checks {
 
     public static void periodMoreZero(LocalDate start, LocalDate end) throws PeriodException {
-        Period period = Period.between(start, end);
-        if (period.isNegative() || period.isZero()) {
+        if (start.isAfter(end)) {
             throw new PeriodException(start, end);
         }
     }
 
     public static void periodMoreZero(LocalDate start, LocalDate end, String msg) throws PeriodException {
-        Period period = Period.between(start, end);
-        if (period.isNegative() || period.isZero()) {
+        if (start.isAfter(end)) {
             throw new PeriodException(start, end, msg);
         }
     }
