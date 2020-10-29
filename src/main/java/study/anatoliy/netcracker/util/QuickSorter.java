@@ -13,36 +13,39 @@ import java.util.List;
  */
 public class QuickSorter implements ISorter {
 
+
+    /**
+     * @see Sorters#get(TypeSorter)
+     */
     QuickSorter() {}
 
     @Override
-    public <T> void sort(List<T> a, int start, int end, Comparator<T> c) {
-        if (start - end > 0) {
-            throw new IllegalArgumentException(start + " > " + end);
+    public <T> void sort(List<T> a, int from, int to, Comparator<T> c) {
+        if (from - to > 0) {
+            throw new IllegalArgumentException(from + " > " + to);
         }
-        recursiveSort(a, start, end, c);
+        recursiveSort(a, from, to - 1, c);
     }
 
     @Override
-    public <T> void sort(T[] a, int start, int end, Comparator<T> c) {
-        if (start - end > 0) {
-            throw new IllegalArgumentException(start + " > " + end);
+    public <T> void sort(T[] a, int from, int to, Comparator<T> c) {
+        if (from - to > 0) {
+            throw new IllegalArgumentException(from + " > " + to);
         }
-        recursiveSort(a, start, end, c);
+        recursiveSort(a, from, to - 1, c);
     }
 
-    private <T> void recursiveSort(List<T> a, int start, int end, Comparator<T> c) {
-        end -= 1;
+    private <T> void recursiveSort(List<T> a, int from, int to, Comparator<T> c) {
         if (a.size() == 0)
             return;
 
-        if (start >= end)
+        if (from >= to)
             return;
 
-        int middle = start + (end - start) / 2;
+        int middle = from + (to - from) / 2;
         T supElem = a.get(middle);
 
-        int i = start, j = end;
+        int i = from, j = to;
         while (i <= j) {
             while (c.compare(a.get(i), supElem) < 0) {
                 i++;
@@ -59,27 +62,26 @@ public class QuickSorter implements ISorter {
             }
         }
 
-        if (start < j) {
-            recursiveSort(a, start, j + 1, c);
+        if (from < j) {
+            recursiveSort(a, from, j, c);
         }
 
-        if (end > i) {
-            recursiveSort(a, i, end + 1, c);
+        if (to > i) {
+            recursiveSort(a, i, to, c);
         }
     }
 
-    private <T> void recursiveSort(T[] a, int start, int end, Comparator<T> c) {
-        end -= 1;
+    private <T> void recursiveSort(T[] a, int from, int to, Comparator<T> c) {
         if (a.length == 0)
             return;
 
-        if (start >= end)
+        if (from >= to)
             return;
 
-        int middle = start + (end - start) / 2;
+        int middle = from + (to - from) / 2;
         T supElem = a[middle];
 
-        int i = start, j = end;
+        int i = from, j = to;
         while (i <= j) {
             while (c.compare(a[i], supElem) < 0) {
                 i++;
@@ -96,12 +98,12 @@ public class QuickSorter implements ISorter {
             }
         }
 
-        if (start < j) {
-            recursiveSort(a, start, j + 1, c);
+        if (from < j) {
+            recursiveSort(a, from, j, c);
         }
 
-        if (end > i) {
-            recursiveSort(a, i, end + 1, c);
+        if (to > i) {
+            recursiveSort(a, i, to, c);
         }
     }
 

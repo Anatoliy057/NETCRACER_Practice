@@ -13,18 +13,21 @@ import java.util.List;
  */
 public class BubbleSorter implements ISorter {
 
+    /**
+     * @see Sorters#get(TypeSorter)
+     */
     BubbleSorter() {}
 
     @Override
-    public <T> void sort(List<T> a, int start, int end, Comparator<T> c) {
-        if (start - end > 0) {
-            throw new IllegalArgumentException(start + " > " + end);
+    public <T> void sort(List<T> a, int from, int to, Comparator<T> c) {
+        if (from - to > 0) {
+            throw new IllegalArgumentException(from + " > " + to);
         }
 
-        int i = start;
-        while (i < end) {
+        int i = from;
+        while (i < to) {
             int last = i + 1;
-            for (int j = end - 1; j > i; j--) {
+            for (int j = to - 1; j > i; j--) {
                 if (c.compare(a.get(j), a.get(j-1)) < 0) {
                     ISorter.swap(a, j, j-1);
                     last = j;
@@ -35,15 +38,15 @@ public class BubbleSorter implements ISorter {
     }
 
     @Override
-    public <T> void sort(T[] a, int start, int end, Comparator<T> c) {
-        if (start - end > 0) {
-            throw new IllegalArgumentException(start + " > " + end);
+    public <T> void sort(T[] a, int from, int to, Comparator<T> c) {
+        if (from - to > 0) {
+            throw new IllegalArgumentException(from + " > " + to);
         }
 
-        int i = start;
-        while (i < end) {
+        int i = from;
+        while (i < to) {
             int last = i + 1;
-            for (int j = end - 1; j > i; j--) {
+            for (int j = to - 1; j > i; j--) {
                 if (c.compare(a[j], a[j-1]) < 0) {
                     ISorter.swap(a, j, j-1);
                     last = j;
