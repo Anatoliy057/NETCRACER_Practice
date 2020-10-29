@@ -2,13 +2,14 @@ package study.anatoliy.netcracker.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BubbleSortTest {
+class BubbleSorterTest {
 
-    ISorter sorter = new BubbleSort();
+    ISorter sorter = new BubbleSorter();
 
     @Test
     public void sort_emptyArray_nothingHappened() {
@@ -24,7 +25,7 @@ class BubbleSortTest {
         sorter.sort(a);
 
         for (int i = 0; i < a.length - 1; i++) {
-            assertTrue(a[i] <= a[i+1]);
+            assertTrue(a[i] <= a[i+1], Arrays.toString(a));
         }
     }
 
@@ -39,7 +40,7 @@ class BubbleSortTest {
         sorter.sort(a);
 
         for (int i = 0; i < a.length - 1; i++) {
-            assertTrue(a[i] <= a[i+1]);
+            assertTrue(a[i] <= a[i+1], Arrays.toString(a));
         }
     }
 
@@ -53,7 +54,7 @@ class BubbleSortTest {
         sorter.sort(a);
 
         for (int i = 0; i < a.length - 1; i++) {
-            assertTrue(a[i] <= a[i+1]);
+            assertTrue(a[i] <= a[i+1], Arrays.toString(a));
         }
     }
 

@@ -2,7 +2,7 @@ package study.anatoliy.netcracker.util;
 
 import java.util.Comparator;
 
-public class BubbleSort implements ISorter {
+public class BubbleSorter implements ISorter {
 
     @Override
     public <T> void sort(T[] a, int start, int end, Comparator<T> c) {
