@@ -4,10 +4,7 @@ import study.anatoliy.netcracker.domain.contract.Contract;
 import study.anatoliy.netcracker.domain.contract.TypeContract;
 import study.anatoliy.netcracker.util.Checks;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Repository of various contracts
@@ -17,13 +14,13 @@ import java.util.Optional;
  *
  * @see Contract
  * @see TypeContract
+ * 
  * @author Udarczev Anatoliy
  */
 public class ContractRepository {
 
-    /** Comparator for comparison contracts by id */
-    private static final Comparator<Contract> comparator = Comparator.comparingLong(Contract::getId);
-
+    /** Set of stored contract keys */
+    private final Set<Long> ids;
     /** Array of stored contracts */
     private Contract[] contracts;
     /** Number of stored contracts */
@@ -40,6 +37,7 @@ public class ContractRepository {
         contracts = new Contract[capacity];
         size = 0;
         isSorted = true;
+        ids = new HashSet<>();
     }
 
     /**
@@ -52,43 +50,42 @@ public class ContractRepository {
     /**
      * @param contract added contract
      * @throws ContractAlreadyExistsException if a contract with such an ID already exists
+     *
+     * @see ContractRepository#addIdContract(long)
+     * @see ContractRepository#ensureCapacityInternal(int)
      */
     public void add(Contract contract) throws ContractAlreadyExistsException {
-        checkIdCollision(contract.getId());
+        addIdContract(contract.getId());
         ensureCapacityInternal(size + 1);
         contracts[size++] = contract;
-        checkIsSorted(size-1);
     }
 
     /**
      * @param c lots of added contracts
      * @throws ContractAlreadyExistsException if a contract with such an ID already exists
      *
-     * @see ContractRepository#checkIdCollision(long)
+     * @see ContractRepository#addIdContract(long)
      * @see ContractRepository#ensureCapacityInternal(int)
-     * @see ContractRepository#checkIsSorted(int)
      */
     public void addAll(Collection<Contract> c) throws ContractAlreadyExistsException {
         for (Contract contract :
                 c) {
-            checkIdCollision(contract.getId());
+            addIdContract(contract.getId());
         }
         Contract[] src = c.toArray(new Contract[0]);
         ensureCapacityInternal(size + c.size());
         System.arraycopy(src, 0, contracts, size, src.length);
         size += c.size();
-        checkIsSorted(size-1);
     }
 
     /**
      * @param id ID of the contract we are looking for
      * @return optional contract with the specified id
      *
-     * @see ContractRepository#sort()
-     * @see ContractRepository#getIndex(long)
+     * @see ContractRepository#searchById(long)
      */
     public Optional<Contract> getByID(long id) {
-        int index = getIndex(id);
+        int index = searchById(id);
         return index < 0 ? Optional.empty() : Optional.of(contracts[searchById(id)]);
     }
 
@@ -96,54 +93,14 @@ public class ContractRepository {
      * @param id ID of the contract to be deleted
      * @return the optional deleted contract
      *
-     * @see ContractRepository#sort()
-     * @see ContractRepository#getIndex(long)
+     * @see ContractRepository#searchById(long)
      */
     public Optional<Contract> removeById(long id) {
-        int index = getIndex(id);
+        int index = searchById(id);
         if (index < 0) {
             return Optional.empty();
         }
         return Optional.of(remove(index));
-    }
-
-    /**
-     * Before binary sorting, checks if the array is sorted,
-     * in case of false - sorts
-     *
-     * @param id ID of the contract we are looking for
-     * @return index of contract, if not found will return -1
-     */
-    private int getIndex(long id) {
-        if (!isSorted) {
-            sort();
-        }
-        return searchById(id);
-    }
-
-    /**
-     * Checks, in order with the specified index, whether the contracts array is sorted
-     *
-     * @param from from which index to check if the array of contracts is sorted
-     */
-    private void checkIsSorted(int from) {
-        if (from < 0 || !isSorted) return;
-        for (int i = from; i < size-1; i++) {
-            if (comparator.compare(contracts[i], contracts[i+1]) < 0) {
-                isSorted = false;
-                return;
-            }
-        }
-    }
-
-    /**
-     * Sorts an array of contracts by id
-     */
-    private void sort() {
-        if (size != 0) {
-            Arrays.sort(contracts, comparator);
-        }
-        isSorted = true;
     }
 
     /**
@@ -178,27 +135,19 @@ public class ContractRepository {
     }
 
     /**
-     * Binary search
+     * Sequential search
      *
      * @param id id of the contract we are looking for
      * @return index of the found contract, if not found will return -1
      */
     private int searchById(long id) {
-        int low = 0;
-        int high = size - 1;
-
-        while (low <= high) {
-            int mid = (low + high) >>> 1;
-            Contract midContact = contracts[mid];
-            int cmp = Long.compare(midContact.getId(), id);
-            if (cmp < 0)
-                low = mid + 1;
-            else if (cmp > 0)
-                high = mid - 1;
-            else
-                return mid;
+        for (int i = 0; i < size; i++) {
+            Contract c = contracts[i];
+            if (c.getId() == id) {
+                return i;
+            }
         }
-        return -(low + 1);
+        return -1;
     }
 
     /**
@@ -207,6 +156,8 @@ public class ContractRepository {
      *
      * @param index the index of the contract to be deleted
      * @return deleted contract
+     *
+     * @see ContractRepository#removeIdContract(long)
      */
     private Contract remove(int index) {
         Contract contract = contracts[index];
@@ -217,21 +168,31 @@ public class ContractRepository {
                     numMoved);
         contracts[--size] = null;
 
+        removeIdContract(contract.getId());
+
         return contract;
     }
 
     /**
+     * Adds a contract ID to the set of existing contracts IDs
+     *
      * @param id ID of the added contract
      * @throws ContractAlreadyExistsException if a contract with the specified id already exists
-     *
-     * @see ContractRepository#sort()
-     * @see ContractRepository#getIndex(long)
      */
-    private void checkIdCollision(long id) throws ContractAlreadyExistsException {
-        int index = getIndex(id);
-        if (index >= 0) {
+    private void addIdContract(long id) throws ContractAlreadyExistsException {
+        if (ids.contains(id)) {
             throw new ContractAlreadyExistsException(id);
         }
+        ids.add(id);
+    }
+
+    /**
+     * Removes the contract ID from the set of existing contracts IDs
+     *
+     * @param id ID of the contract to be deleted
+     */
+    private void removeIdContract(long id) {
+        ids.remove(id);
     }
 
     public int size() {
