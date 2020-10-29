@@ -2,7 +2,7 @@ package study.anatoliy.netcracker.repository;
 
 import study.anatoliy.netcracker.domain.contract.Contract;
 import study.anatoliy.netcracker.domain.contract.TypeContract;
-import study.anatoliy.netcracker.util.Checks;
+import study.anatoliy.netcracker.util.*;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -12,6 +12,8 @@ import java.util.function.Predicate;
  * Allows:
  * - Receive contracts with the specified ID
  * - Remove contracts with the specified ID
+ * - Get filtered contracts
+ * - Get sorted contracts
  *
  * @see Contract
  * @see TypeContract
@@ -21,23 +23,36 @@ public class ContractRepository {
 
     /** Comparator for comparison contracts by id */
     private static final Comparator<Contract> comparator = Comparator.comparingLong(Contract::getId);
-
     /** Array of stored contracts */
     private Contract[] contracts;
     /** Number of stored contracts */
     private int size;
     /** Indicates if an array of contracts is sorted */
     private boolean isSorted;
+    /** sorting algorithm */
+    private ISorter sorter;
 
     /**
      * @param capacity estimated number of stored contracts
+     * @param sorter the algorithm by which the sorting will be carried out
      * @throws IllegalArgumentException if capacity > 0
+     * @throws NullPointerException if sorter is null
      */
-    public ContractRepository(int capacity) {
+    public ContractRepository(int capacity, ISorter sorter) {
+        Objects.requireNonNull(sorter);
         Checks.numberIsPositive(capacity, "Capacity must be > 0");
         contracts = new Contract[capacity];
         size = 0;
         isSorted = true;
+        this.sorter = sorter;
+    }
+
+    /**
+     * @param capacity estimated number of stored contracts
+     * @see ContractRepository#ContractRepository(int, ISorter) where type of sorter is QUICK
+     */
+    public ContractRepository(int capacity) {
+        this(capacity, Sorters.get(TypeSorter.QUICK));
     }
 
     /**
@@ -98,7 +113,7 @@ public class ContractRepository {
      */
     public List<Contract> getAllSortedBy(Comparator<Contract> comparator) {
         List<Contract> sortedContracts = Arrays.asList(Arrays.copyOf(contracts, size));
-        sortedContracts.sort(comparator);
+        sorter.sort(sortedContracts, comparator);
         return sortedContracts;
     }
 
@@ -258,6 +273,15 @@ public class ContractRepository {
 
     public int size() {
         return size;
+    }
+
+    public ISorter getSorter() {
+        return sorter;
+    }
+
+    public ContractRepository setSorter(ISorter sorter) {
+        this.sorter = sorter;
+        return this;
     }
 
     @Override
