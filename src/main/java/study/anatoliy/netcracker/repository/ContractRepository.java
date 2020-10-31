@@ -25,8 +25,6 @@ public class ContractRepository {
     private Contract[] contracts;
     /** Number of stored contracts */
     private int size;
-    /** Indicates if an array of contracts is sorted */
-    private boolean isSorted;
 
     /**
      * @param capacity estimated number of stored contracts
@@ -36,7 +34,6 @@ public class ContractRepository {
         Checks.numberIsPositive(capacity, "Capacity must be > 0");
         contracts = new Contract[capacity];
         size = 0;
-        isSorted = true;
         ids = new HashSet<>();
     }
 
@@ -86,7 +83,7 @@ public class ContractRepository {
      */
     public Optional<Contract> getByID(long id) {
         int index = searchById(id);
-        return index < 0 ? Optional.empty() : Optional.of(contracts[searchById(id)]);
+        return index < 0 ? Optional.empty() : Optional.of(contracts[index]);
     }
 
     /**
@@ -180,10 +177,9 @@ public class ContractRepository {
      * @throws ContractAlreadyExistsException if a contract with the specified id already exists
      */
     private void addIdContract(long id) throws ContractAlreadyExistsException {
-        if (ids.contains(id)) {
+        if (!ids.add(id)) {
             throw new ContractAlreadyExistsException(id);
         }
-        ids.add(id);
     }
 
     /**
@@ -204,7 +200,6 @@ public class ContractRepository {
         return "ContractRepository{" +
                 "contracts=" + Arrays.toString(contracts) +
                 ", size=" + size +
-                ", isSorted=" + isSorted +
                 '}';
     }
 }

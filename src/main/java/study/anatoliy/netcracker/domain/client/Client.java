@@ -4,6 +4,7 @@ import study.anatoliy.netcracker.domain.exception.PeriodException;
 import study.anatoliy.netcracker.util.Checks;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Objects;
 
 /**
@@ -47,7 +48,7 @@ public class Client {
      * @return the current age of the client
      */
     public int getAge() {
-        return LocalDate.now().minusYears(birthDate.getYear()).getYear();
+        return Period.between(birthDate, LocalDate.now()).getYears();
     }
 
     public long getId() {
