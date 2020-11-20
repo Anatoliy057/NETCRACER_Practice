@@ -1,7 +1,8 @@
 package study.anatoliy.netcracker.util;
 
 import com.opencsv.CSVReader;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import study.anatoliy.netcracker.domain.client.Client;
 import study.anatoliy.netcracker.domain.client.ClientBuilder;
 import study.anatoliy.netcracker.domain.client.Gender;
@@ -12,6 +13,8 @@ import study.anatoliy.netcracker.repository.ContractRepository;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +23,7 @@ import java.util.List;
 public class ContractParser {
 
     public final static Collection<Validator<String[]>> DEFAULT_VALIDATORS;
-    private static final Logger logger = Logger.getLogger(ContractParser.class);
+    private final Logger logger = LoggerFactory.getLogger(ContractParser.class);
 
     static {
         DEFAULT_VALIDATORS = new ArrayList<>();
@@ -45,7 +48,7 @@ public class ContractParser {
                     throw new ValidException(String.format("Unknown channel package '%s' for digital tv contract", addInfo));
                 }
             } else if (type == TypeContract.MOBILE) {
-                if (!addInfo.matches("(-?\\d+);\\1;\\1")) {
+                if (!addInfo.matches("-?\\d+;-?\\d+;-?\\d+")) {
                     throw new ValidException("Addition information for mobile contract must match this: '(-?\\d+);\\1;\\1'");
                 }
             } else if (type == TypeContract.WIRED_INTERNET) {
@@ -110,85 +113,93 @@ public class ContractParser {
         this.validators.addAll(validators);
     }
 
-    public void parse(String file, ContractRepository repo) {
+    public void parseFile(String file, ContractRepository repo) {
         try (FileReader fileReader = new FileReader(file)) {
-            CSVReader reader = new CSVReader(fileReader);
-            int index = -1;
-
-            for (String[] line : reader) {
-                index++;
-
-                if (line.length != SIZE_COLUMNS) {
-                    logger.error("Must be 10 arguments at line %s" + index);
-                    continue;
-                }
-
-                try {
-                    valid(line);
-                } catch (ValidException e) {
-                    logger.error(String.format("Failed valid the contract at %d cause: %s", index, e.getMessage()));
-                    continue;
-                }
-
-                Client client;
-                try {
-                    client = new ClientBuilder()
-                            .setID(Long.parseLong(line[4]))
-                            .setBirthDate(LocalDate.parse(line[5]))
-                            .setFullName(line[6])
-                            .setPassport(line[7])
-                            .setGender(Gender.valueOf(line[8].toUpperCase()))
-                            .build();
-                } catch (PeriodException e) {
-                    logger.error("Client initialization error at line " + index, e);
-                    continue;
-                }
-
-                Contract contract = null;
-                TypeContract type = TypeContract.valueOf(line[0].toUpperCase());
-                try {
-                    if (type == TypeContract.DIGITAL_TV) {
-                        contract = new DigitalTVContractBuilder()
-                                .setClient(client)
-                                .setId(Long.parseLong(line[1]))
-                                .setStartDate(LocalDate.parse(line[2]))
-                                .setExpirationDate(LocalDate.parse(line[3]))
-                                .setChannelPackage(ChannelPackage.valueOf(line[9].toUpperCase()))
-                                .build();
-
-                    } else if (type == TypeContract.WIRED_INTERNET) {
-                        contract = new InternetContractBuilder()
-                                .setClient(client)
-                                .setId(Long.parseLong(line[1]))
-                                .setStartDate(LocalDate.parse(line[2]))
-                                .setExpirationDate(LocalDate.parse(line[3]))
-                                .setMegabits(Integer.parseInt(line[9]))
-                                .build();
-
-                    } else if (type == TypeContract.MOBILE) {
-                        String[] addInfo = line[9].split(";");
-                        contract = new MobileContractBuilder()
-                                .setClient(client)
-                                .setId(Long.parseLong(line[1]))
-                                .setStartDate(LocalDate.parse(line[2]))
-                                .setExpirationDate(LocalDate.parse(line[3]))
-                                .setMinutes(Integer.parseInt(addInfo[0]))
-                                .setSms(Integer.parseInt(addInfo[1]))
-                                .setMegabytes(Integer.parseInt(addInfo[2]))
-                                .build();
-                    }
-
-                    //contract can not be null in this case
-                    repo.add(contract);
-                } catch (PeriodException | IllegalArgumentException e) {
-                    logger.error("Contract initialization error at line " + index, e);
-
-                } catch (ContractAlreadyExistsException e) {
-                    logger.error("Can't add contract " + index, e);
-                }
-            }
+            parse(fileReader, repo);
         } catch (IOException e) {
             logger.error("Failed to read the file", e);
+        }
+    }
+
+    public void parseString(String text, ContractRepository repo) {
+        parse(new StringReader(text), repo);
+    }
+
+    private void parse(Reader reader, ContractRepository repo) {
+        CSVReader csvReader = new CSVReader(reader);
+        int index = -1;
+
+        for (String[] line : csvReader) {
+            index++;
+
+            if (line.length != SIZE_COLUMNS) {
+                logger.error("Must be 10 arguments at line " + index);
+                continue;
+            }
+
+            try {
+                valid(line);
+            } catch (ValidException e) {
+                logger.error(String.format("Failed valid the contract at %d cause: %s", index, e.getMessage()));
+                continue;
+            }
+
+            Client client;
+            try {
+                client = new ClientBuilder()
+                        .setID(Long.parseLong(line[4]))
+                        .setBirthDate(LocalDate.parse(line[5]))
+                        .setFullName(line[6])
+                        .setPassport(line[7])
+                        .setGender(Gender.valueOf(line[8].toUpperCase()))
+                        .build();
+            } catch (PeriodException e) {
+                logger.error("Client initialization error at line " + index, e);
+                continue;
+            }
+
+            Contract contract = null;
+            TypeContract type = TypeContract.valueOf(line[0].toUpperCase());
+            try {
+                if (type == TypeContract.DIGITAL_TV) {
+                    contract = new DigitalTVContractBuilder()
+                            .setClient(client)
+                            .setId(Long.parseLong(line[1]))
+                            .setStartDate(LocalDate.parse(line[2]))
+                            .setExpirationDate(LocalDate.parse(line[3]))
+                            .setChannelPackage(ChannelPackage.valueOf(line[9].toUpperCase()))
+                            .build();
+
+                } else if (type == TypeContract.WIRED_INTERNET) {
+                    contract = new InternetContractBuilder()
+                            .setClient(client)
+                            .setId(Long.parseLong(line[1]))
+                            .setStartDate(LocalDate.parse(line[2]))
+                            .setExpirationDate(LocalDate.parse(line[3]))
+                            .setMegabits(Integer.parseInt(line[9]))
+                            .build();
+
+                } else if (type == TypeContract.MOBILE) {
+                    String[] addInfo = line[9].split(";");
+                    contract = new MobileContractBuilder()
+                            .setClient(client)
+                            .setId(Long.parseLong(line[1]))
+                            .setStartDate(LocalDate.parse(line[2]))
+                            .setExpirationDate(LocalDate.parse(line[3]))
+                            .setMinutes(Integer.parseInt(addInfo[0]))
+                            .setSms(Integer.parseInt(addInfo[1]))
+                            .setMegabytes(Integer.parseInt(addInfo[2]))
+                            .build();
+                }
+
+                //contract can not be null in this case
+                repo.add(contract);
+            } catch (PeriodException | IllegalArgumentException e) {
+                logger.error("Contract initialization error at line " + index, e);
+
+            } catch (ContractAlreadyExistsException e) {
+                logger.error("Can't add contract " + index, e);
+            }
         }
     }
 
