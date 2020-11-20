@@ -20,10 +20,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Parsing contracts in csv format to the repository
+ *
+ * @author Udarczev Anatoliy
+ */
 public class ContractParser {
 
-    public final static Collection<Validator<String[]>> DEFAULT_VALIDATORS;
     private final Logger logger = LoggerFactory.getLogger(ContractParser.class);
+
+    /** Default validators for type checking */
+    private final static Collection<Validator<String[]>> DEFAULT_VALIDATORS;
 
     static {
         DEFAULT_VALIDATORS = new ArrayList<>();
@@ -47,10 +54,12 @@ public class ContractParser {
                 } catch (IllegalArgumentException e) {
                     throw new ValidException(String.format("Unknown channel package '%s' for digital tv contract", addInfo));
                 }
+
             } else if (type == TypeContract.MOBILE) {
                 if (!addInfo.matches("-?\\d+;-?\\d+;-?\\d+")) {
                     throw new ValidException("Addition information for mobile contract must match this: '(-?\\d+);\\1;\\1'");
                 }
+
             } else if (type == TypeContract.WIRED_INTERNET) {
                 if (!Utils.isInteger(addInfo)) {
                     throw new ValidException("Addition information for wired internet contract must be integer, but: " + addInfo);
@@ -88,7 +97,10 @@ public class ContractParser {
         });
     }
 
+    /** Validators for validating arguments of row */
     private final List<Validator<String[]>> validators;
+
+    /** Number arguments of row */
     private final static int SIZE_COLUMNS = 10;
 
     public ContractParser() {
@@ -100,19 +112,43 @@ public class ContractParser {
         this.validators = new ArrayList<>(validators);
     }
 
+    /**
+     * Adds default validators to the current list
+     *
+     * @return this
+     */
     public ContractParser withDefaultValidator() {
         addAllValidators(DEFAULT_VALIDATORS);
         return this;
     }
 
+    /**
+     * Adds given validator to the current list
+     *
+     * @param validator added validator
+     */
     public void addValidator(Validator<String[]> validator) {
         validators.add(validator);
     }
 
+    /**
+     * Adds given collection of validators to the current list
+     *
+     * @param validators collection added validators
+     */
     public void addAllValidators(Collection<Validator<String[]>> validators) {
         this.validators.addAll(validators);
     }
 
+    /**
+     * Parses the csv file into contracts, if validation fails,
+     * a log is displayed error and the contract is not added
+     *
+     * @param file file in csv format
+     * @param repo repository where contracts will be added
+     *
+     * @see ContractParser#parseFile(String, ContractRepository)
+     */
     public void parseFile(String file, ContractRepository repo) {
         try (FileReader fileReader = new FileReader(file)) {
             parse(fileReader, repo);
@@ -121,10 +157,27 @@ public class ContractParser {
         }
     }
 
+    /**
+     * Parses the csv string into contracts, if validation line or initialization contract fails,
+     * a log is displayed error and the contract is not added
+     *
+     * @param text string in csv format
+     * @param repo repository where contracts will be added
+     *
+     * @see ContractParser#parseFile(String, ContractRepository)
+     */
     public void parseString(String text, ContractRepository repo) {
         parse(new StringReader(text), repo);
     }
 
+    /**
+     * Reads from the reader and converts data from csv format into contracts.
+     * If validation line or initialization contract fails,
+     * a log is displayed error and the contract is not added
+     *
+     * @param reader source reader
+     * @param repo repository where contracts will be added
+     */
     private void parse(Reader reader, ContractRepository repo) {
         CSVReader csvReader = new CSVReader(reader);
         int index = -1;
@@ -194,6 +247,7 @@ public class ContractParser {
 
                 //contract can not be null in this case
                 repo.add(contract);
+
             } catch (PeriodException | IllegalArgumentException e) {
                 logger.error("Contract initialization error at line " + index, e);
 
