@@ -2,7 +2,7 @@ package study.anatoliy.netcracker.domain.contract;
 
 import study.anatoliy.netcracker.domain.client.Client;
 import study.anatoliy.netcracker.domain.exception.PeriodException;
-import study.anatoliy.netcracker.util.Checks;
+import study.anatoliy.netcracker.util.Utils;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -24,7 +24,7 @@ public class InternetContract extends Contract {
      */
     public InternetContract(long ID, LocalDate startDate, LocalDate expirationDate, Client client, int megabits) throws PeriodException {
         super(ID, startDate, expirationDate, client);
-        Checks.numberIsPositive(megabits, "Internet speed cannot be negative");
+        Utils.numberIsPositive(megabits, "Internet speed cannot be negative");
         this.megabits = megabits;
     }
 

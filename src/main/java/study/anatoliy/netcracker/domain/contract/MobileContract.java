@@ -2,7 +2,7 @@ package study.anatoliy.netcracker.domain.contract;
 
 import study.anatoliy.netcracker.domain.client.Client;
 import study.anatoliy.netcracker.domain.exception.PeriodException;
-import study.anatoliy.netcracker.util.Checks;
+import study.anatoliy.netcracker.util.Utils;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -27,9 +27,9 @@ public class MobileContract extends Contract {
      */
     public MobileContract(long ID, LocalDate startDate, LocalDate expirationDate, Client client, int minutes, int sms, int megabytes) throws PeriodException {
         super(ID, startDate, expirationDate, client);
-        Checks.numberIsPositive(minutes, "The number of minutes cannot be negative");
-        Checks.numberIsPositive(minutes, "The number of sms cannot be negative");
-        Checks.numberIsPositive(minutes, "The number of megabytes cannot be negative");
+        Utils.numberIsPositive(minutes, "The number of minutes cannot be negative");
+        Utils.numberIsPositive(minutes, "The number of sms cannot be negative");
+        Utils.numberIsPositive(minutes, "The number of megabytes cannot be negative");
         this.minutes = minutes;
         this.sms = sms;
         this.megabytes = megabytes;

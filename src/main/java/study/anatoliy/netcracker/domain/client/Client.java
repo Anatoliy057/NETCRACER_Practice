@@ -1,7 +1,7 @@
 package study.anatoliy.netcracker.domain.client;
 
 import study.anatoliy.netcracker.domain.exception.PeriodException;
-import study.anatoliy.netcracker.util.Checks;
+import study.anatoliy.netcracker.util.Utils;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -84,7 +84,8 @@ public class Client {
     }
 
     private void checkBirth() throws PeriodException {
-        Checks.periodMoreZero(birthDate, LocalDate.now(), "Client cannot be born later than current date");
+        Utils.periodMoreZero(birthDate, LocalDate.now(), "Client cannot be born later than current date");
+        Utils.periodMoreZero(LocalDate.now().minusYears(130), birthDate, "Client's age exceeds 130 years");
     }
 
     @Override

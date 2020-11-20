@@ -39,7 +39,7 @@ public class ContractRepository {
      */
     public ContractRepository(int capacity, ISorter sorter) {
         Objects.requireNonNull(sorter);
-        Checks.numberIsPositive(capacity, "Capacity must be > 0");
+        Utils.numberIsPositive(capacity, "Capacity must be > 0");
         contracts = new Contract[capacity];
         size = 0;
         ids = new HashSet<>();
