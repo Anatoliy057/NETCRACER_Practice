@@ -55,7 +55,7 @@ class ContractParserTest {
 
             parser.parseString(row, repo);
 
-            verify(logger, times(1)).error("Failed valid the contract at 0 cause: Unknown type contract DIGITAL_TV2");
+            verify(logger, times(1)).error(anyString(), any(Throwable.class));
         }
     }
 
