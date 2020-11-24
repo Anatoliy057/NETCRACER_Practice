@@ -75,4 +75,20 @@ class ContractParserTest {
         }
     }
 
+    @Test
+    public void parseString_clientDataMismatch_errorLog() throws Exception {
+        Logger logger = mock(Logger.class);
+        try (MockedStatic<LoggerFactory> mocked = mockStatic(LoggerFactory.class)) {
+            mocked.when(() -> LoggerFactory.getLogger(any(Class.class))).thenReturn(logger);
+            ContractRepository repo = new ContractRepository();
+            ContractParser parser = new ContractParser();
+            String row = "digital_tv,9,2012-01-01,2019-01-01,2,1995-08-09,Полина Анастия Сергеевна,1234 566666,female,standard\n" +
+                    "wired_internet,8,2018-01-01,2023-01-01,2,1995-08-09,Борденко Павел Алексеевич,1234 566666,female,2048\n";
+
+            parser.parseString(row, repo);
+
+            verify(logger, times(1)).error("Client data mismatch at 1 when such customer has already been registered");
+        }
+    }
+
 }

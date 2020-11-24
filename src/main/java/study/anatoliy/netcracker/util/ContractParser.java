@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Parsing contracts in csv format to the repository
@@ -91,6 +94,19 @@ public class ContractParser {
                             .setPassport(line[7])
                             .setGender(Gender.valueOf(line[8].toUpperCase()))
                             .build();
+
+                    Optional<Client> cached = ClientCache.get(client.getId());
+
+                    if (cached.isPresent()) {
+                        if (cached.get().equals(client)) {
+                            client = cached.get();
+                        } else {
+                            logger.error(String.format("Client data mismatch at %d when such customer has already been registered", index));
+                            continue;
+                        }
+                    } else {
+                        ClientCache.put(client);
+                    }
                 } catch (PeriodException e) {
                     logger.error("Client initialization error at line " + index, e);
                     continue;
@@ -141,6 +157,19 @@ public class ContractParser {
             } catch (Exception e) {
                 logger.error("Can't parse contract " + index, e);
             }
+        }
+    }
+
+    private static class ClientCache {
+
+        private static Map<Long, Client> cache = new HashMap<>();
+
+        private static Optional<Client> get(long id) {
+            return Optional.ofNullable(cache.get(id));
+        }
+
+        private static void put(Client client) {
+            cache.put(client.getId(), client);
         }
     }
 }
