@@ -14,9 +14,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class Validators {
+/**
+ * List of static methods, that creates validators for client or contract
+ *
+ * @see Validator
+ * @see ValidatorSupport
+ *
+ * @author Udarczev Anatoliy
+ */
+public class Validators {
 
-    public static Validator<Client> validatorBirthDateClient() {
+    /**
+     * Returns a validator for valid the client's birthday
+     *
+     * @return client validator
+     */
+    static Validator<Client> validatorBirthDateClient() {
         return ValidatorSupport.of(Client.class,
                 client -> {
                     List<ValidationMessage> messages = new ArrayList<>();
@@ -33,7 +46,12 @@ class Validators {
                 });
     }
 
-    public static Validator<Client> validatorIdClient() {
+    /**
+     * Returns a validator for valid the client id
+     *
+     * @return client validator
+     */
+    static Validator<Client> validatorIdClient() {
         return ValidatorSupport.of(Client.class,
                 client -> {
                     if (client.getId() < 0) {
@@ -44,7 +62,12 @@ class Validators {
                 });
     }
 
-    public static Validator<Contract> validatorIdContract() {
+    /**
+     * Returns a validator for valid the contract id
+     *
+     * @return contract validator
+     */
+    static Validator<Contract> validatorIdContract() {
         return ValidatorSupport.of(Contract.class,
                 contract -> {
                     if (contract.getId() < 0) {
@@ -55,7 +78,12 @@ class Validators {
                 });
     }
 
-    public static Validator<Contract> validatorDatesContract() {
+    /**
+     * Returns a validator for valid the contract start date and end date
+     *
+     * @return contract validator
+     */
+    static Validator<Contract> validatorDatesContract() {
         return ValidatorSupport.of(Contract.class,
                 contract -> {
                     List<ValidationMessage> messages = new ArrayList<>();
@@ -72,7 +100,12 @@ class Validators {
                 });
     }
 
-    public static Validator<Contract> validatorInternetContract() {
+    /**
+     * Returns a validator for valid the internet contract
+     *
+     * @return contract validator
+     */
+    static Validator<Contract> validatorInternetContract() {
         return ValidatorSupport.of(InternetContract.class,
                 contract -> {
                     InternetContract internetContract = (InternetContract) contract;
@@ -85,7 +118,12 @@ class Validators {
                 });
     }
 
-    public static Validator<Contract> validatorMobileContract() {
+    /**
+     * Returns a validator for valid the mobile contract
+     *
+     * @return contract validator
+     */
+    static Validator<Contract> validatorMobileContract() {
         return ValidatorSupport.of(MobileContract.class,
                 contract -> {
                     MobileContract mobileContract = (MobileContract) contract;

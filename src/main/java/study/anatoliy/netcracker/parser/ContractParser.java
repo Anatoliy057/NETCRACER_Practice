@@ -74,7 +74,7 @@ public class ContractParser {
 
     /**
      * Reads from the reader and converts data from csv format into contracts.
-     * If validation line or initialization contract fails,
+     * If validation line, contract, client or initialization contract fails,
      * a log is displayed error and the contract is not added
      *
      * @param reader source reader
@@ -167,6 +167,13 @@ public class ContractParser {
         }
     }
 
+    /**
+     * Makes client validation for all validators
+     *
+     * @param index parsed line number
+     * @param client validated client
+     * @return Overall validation status (highest)
+     */
     private ValidationStatus validClient(int index, Client client) {
         ValidationStatus status = ValidationStatus.SUCCESSFUL;
         for (ValidationMessage message :
@@ -179,6 +186,13 @@ public class ContractParser {
         return status;
     }
 
+    /**
+     * Makes contract validation for all validators
+     *
+     * @param index parsed line number
+     * @param contract validated contract
+     * @return Overall validation status (highest)
+     */
     private ValidationStatus validContract(int index, Contract contract) {
         ValidationStatus status = ValidationStatus.SUCCESSFUL;
         for (ValidationMessage message :
@@ -191,6 +205,12 @@ public class ContractParser {
         return status;
     }
 
+    /**
+     * Logs the result message of validation depending on the status
+     *
+     * @param index parsed line number
+     * @param message result message of validation
+     */
     private void logValidationMessage(int index, ValidationMessage message) {
         if (message.getStatus() == ValidationStatus.ERROR) {
             logger.error(String.format("Error valid at %d, cause: %s", index, message.getMessage()));

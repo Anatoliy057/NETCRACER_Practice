@@ -6,10 +6,18 @@ import study.anatoliy.netcracker.util.validator.Validator;
 import study.anatoliy.netcracker.util.validator.ValidatorSupport;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static study.anatoliy.netcracker.validators.Validators.*;
 
+/**
+ * Class that stores contract validators (singleton)
+ *
+ * @see Validators
+ *
+ * @author Udarczev Anatoliy
+ */
 public class ContractValidator {
 
     private final static ContractValidator INSTANCE = new ContractValidator();
@@ -18,7 +26,7 @@ public class ContractValidator {
         return INSTANCE;
     }
 
-    private List<Validator<Contract>> validators;
+    private final List<Validator<Contract>> validators;
 
     private ContractValidator() {
         validators = new ArrayList<>();
@@ -28,7 +36,7 @@ public class ContractValidator {
         validators.add(validator);
     }
 
-    public List<ValidationMessage> doValidation(Contract contract) {
+    public Collection<ValidationMessage> doValidation(Contract contract) {
         return ValidatorSupport.doValidation(contract, validators);
     }
 

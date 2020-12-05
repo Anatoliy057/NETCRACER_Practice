@@ -1,10 +1,19 @@
 package study.anatoliy.netcracker.domain.validation;
 
+import study.anatoliy.netcracker.util.validator.Validator;
+
 import java.util.Objects;
 
+/**
+ * ValidationMessage stores the result of object validation
+ *
+ * @see Validator
+ * @author Udarczev Anatoliy
+ */
 public class ValidationMessage {
-
+    /** Status of validation */
     private ValidationStatus status;
+    /** Description of the validation result */
     private String message;
 
     public ValidationMessage(ValidationStatus status, String message) {
