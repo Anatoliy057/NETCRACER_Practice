@@ -16,7 +16,7 @@ public class ClientBuilder {
     private String passport;
     private Gender gender;
 
-    public ClientBuilder setID(long id) {
+    public ClientBuilder setId(long id) {
         this.id = id;
         return this;
     }

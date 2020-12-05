@@ -95,7 +95,7 @@ public class ContractParser {
             try {
                 Client client;
                     client = new ClientBuilder()
-                            .setID(Long.parseLong(line[4]))
+                            .setId(Long.parseLong(line[4]))
                             .setBirthDate(LocalDate.parse(line[5]))
                             .setFullName(line[6])
                             .setPassport(line[7])

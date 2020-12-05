@@ -24,7 +24,7 @@ public class ValidationMessage {
         return new ValidationMessage(ValidationStatus.ERROR, message);
     }
 
-    public static ValidationMessage warning(String message) {
+    public static ValidationMessage warn(String message) {
         return new ValidationMessage(ValidationStatus.WARN, message);
     }
 

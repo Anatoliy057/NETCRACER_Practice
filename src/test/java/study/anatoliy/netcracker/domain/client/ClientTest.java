@@ -14,7 +14,7 @@ class ClientTest {
         LocalDate birthDate = LocalDate.of(2000, 5, 2);
         Client c = new ClientBuilder()
                 .setFullName("Ударцев Анатолий Александрович")
-                .setID(0)
+                .setId(0)
                 .setGender(Gender.MALE)
                 .setPassport("1234 567890")
                 .setBirthDate(birthDate)
@@ -30,7 +30,7 @@ class ClientTest {
     void new_birthIsNull_throwNullPointerException() {
         ClientBuilder clientBuilder = new ClientBuilder()
                 .setFullName("Ударцев Анатолий Александрович")
-                .setID(0)
+                .setId(0)
                 .setGender(Gender.MALE)
                 .setPassport("1234 567890")
                 .setBirthDate(null);

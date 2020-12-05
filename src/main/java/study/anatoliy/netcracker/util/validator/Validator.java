@@ -10,10 +10,10 @@ public interface Validator<T> {
     List<ValidationMessage> doValidate(T o);
 
     default List<ValidationMessage> valid(T o) {
-        return isSuitableClass(o) ? doValidate(o) : Collections.emptyList();
+        return isSuitableClass(o.getClass()) ? doValidate(o) : Collections.emptyList();
     }
 
-    boolean isSuitableClass(Object o);
+    boolean isSuitableClass(Class<?> c);
 
     Class<? extends T> getClassValidObject();
 }

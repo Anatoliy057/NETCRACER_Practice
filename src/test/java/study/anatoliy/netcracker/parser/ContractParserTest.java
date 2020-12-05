@@ -1,4 +1,4 @@
-package study.anatoliy.netcracker.util;
+package study.anatoliy.netcracker.parser;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;

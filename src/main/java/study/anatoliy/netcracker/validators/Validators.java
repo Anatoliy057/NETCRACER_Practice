@@ -26,7 +26,7 @@ class Validators {
                     }
 
                     if (Utils.periodMoreZero(LocalDate.now().minusYears(130), client.getBirthDate())) {
-                        messages.add(ValidationMessage.error("Client's age exceeds 130 years"));
+                        messages.add(ValidationMessage.warn("Client's age exceeds 130 years"));
                     }
 
                     return messages;
@@ -99,7 +99,7 @@ class Validators {
                         messages.add(ValidationMessage.error("The number of sms cannot be negative"));
                     }
 
-                    if (mobileContract.getGigabytes() < 0) {
+                    if (mobileContract.getMegabytes() < 0) {
                         messages.add(ValidationMessage.error("The number of megabytes cannot be negative"));
                     }
 

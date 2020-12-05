@@ -16,7 +16,7 @@ class ContractTest {
             .setFullName("Ударцев Анатолий Александрович")
             .setPassport("1234 567890")
             .setGender(Gender.MALE)
-            .setID(0)
+            .setId(0)
             .build();
 
     ContractTest() {

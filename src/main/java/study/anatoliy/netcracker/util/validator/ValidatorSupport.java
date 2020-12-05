@@ -17,8 +17,8 @@ public class ValidatorSupport {
             }
 
             @Override
-            public boolean isSuitableClass(Object o) {
-                return clazz.isAssignableFrom(o.getClass());
+            public boolean isSuitableClass(Class<?> c) {
+                return clazz.isAssignableFrom(c);
             }
 
             @Override
