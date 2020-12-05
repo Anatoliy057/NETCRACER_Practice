@@ -1,6 +1,5 @@
 package study.anatoliy.netcracker;
 
-import org.slf4j.LoggerFactory;
 import study.anatoliy.netcracker.repository.ContractRepository;
 import study.anatoliy.netcracker.util.ContractParser;
 
