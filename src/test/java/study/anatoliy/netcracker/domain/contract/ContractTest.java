@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import study.anatoliy.netcracker.domain.client.Client;
 import study.anatoliy.netcracker.domain.client.ClientBuilder;
 import study.anatoliy.netcracker.domain.client.Gender;
-import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
 
@@ -20,23 +19,11 @@ class ContractTest {
             .setID(0)
             .build();
 
-    ContractTest() throws PeriodException {
+    ContractTest() {
     }
 
     @Test
-    public void new_IdIsNegative_throwIllegalArgumentException() throws PeriodException {
-        InternetContractBuilder builder = new InternetContractBuilder()
-                .setMegabits(500)
-                .setClient(client)
-                .setStartDate(LocalDate.of(2019, 1, 1))
-                .setExpirationDate(LocalDate.of(2020, 1, 1))
-                .setId(-1);
-
-        assertThrows(IllegalArgumentException.class, builder::build);
-    }
-
-    @Test
-    public void new_clientIsNull_throwNullPointerException() throws PeriodException {
+    public void new_clientIsNull_throwNullPointerException() {
         InternetContractBuilder builder = new InternetContractBuilder()
                 .setMegabits(500)
                 .setClient(null)

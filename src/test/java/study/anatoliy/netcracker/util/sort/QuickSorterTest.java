@@ -1,14 +1,15 @@
-package study.anatoliy.netcracker.util;
+package study.anatoliy.netcracker.util.sort;
 
 import org.junit.jupiter.api.Test;
+import study.anatoliy.netcracker.util.sort.ISorter;
+import study.anatoliy.netcracker.util.sort.QuickSorter;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BubbleSorterTest {
-
-    ISorter sorter = new BubbleSorter();
+class QuickSorterTest {
+    ISorter sorter = new QuickSorter();
 
     @Test
     public void sort_emptyArray_nothingHappened() {

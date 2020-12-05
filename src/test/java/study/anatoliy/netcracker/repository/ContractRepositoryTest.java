@@ -5,7 +5,7 @@ import study.anatoliy.netcracker.domain.client.Client;
 import study.anatoliy.netcracker.domain.client.ClientBuilder;
 import study.anatoliy.netcracker.domain.client.Gender;
 import study.anatoliy.netcracker.domain.contract.*;
-import study.anatoliy.netcracker.domain.exception.PeriodException;
+import study.anatoliy.netcracker.domain.exception.ContractAlreadyExistsException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -54,7 +54,7 @@ class ContractRepositoryTest {
             .setStartDate(LocalDate.of(2019, 1, 1))
             .setExpirationDate(LocalDate.of(2020, 12, 12));
 
-    ContractRepositoryTest() throws PeriodException {
+    ContractRepositoryTest() {
     }
 
     @Test
@@ -67,7 +67,7 @@ class ContractRepositoryTest {
     }
 
     @Test
-    public void add_repositoryIsFull_capacityGrow() throws ContractAlreadyExistsException, PeriodException {
+    public void add_repositoryIsFull_capacityGrow() throws ContractAlreadyExistsException {
         ContractRepository repo = new ContractRepository(10);
         for (int i = 4; i < 14; i++) {
             repo.add(template.setId(i).build());
@@ -90,7 +90,7 @@ class ContractRepositoryTest {
     }
 
     @Test
-    public void addAll_repositoryIsFull_capacityGrow() throws ContractAlreadyExistsException, PeriodException {
+    public void addAll_repositoryIsFull_capacityGrow() throws ContractAlreadyExistsException {
         ContractRepository repo = new ContractRepository(10);
         for (int i = 4; i < 14; i++) {
             repo.add(template.setId(i).build());
@@ -182,7 +182,7 @@ class ContractRepositoryTest {
     }
 
     @Test
-    public void getAllFilterBy_filterInternet_returnInternetContracts() throws ContractAlreadyExistsException, PeriodException {
+    public void getAllFilterBy_filterInternet_returnInternetContracts() throws ContractAlreadyExistsException {
         ContractRepository repo = new ContractRepository();
         repo.add(digitalTVContract);
         repo.add(internetContract);
@@ -200,7 +200,7 @@ class ContractRepositoryTest {
     }
 
     @Test
-    public void getAllFilterBy_filterStartDate_returnDateMore2018() throws ContractAlreadyExistsException, PeriodException {
+    public void getAllFilterBy_filterStartDate_returnDateMore2018() throws ContractAlreadyExistsException {
         ContractRepository repo = new ContractRepository();
         repo.add(digitalTVContract);
         repo.add(internetContract);
@@ -218,7 +218,7 @@ class ContractRepositoryTest {
     }
 
     @Test
-    public void getAllOrderBy_startDate_returnSortedByDate() throws ContractAlreadyExistsException, PeriodException {
+    public void getAllOrderBy_startDate_returnSortedByDate() throws ContractAlreadyExistsException {
         ContractRepository repo = new ContractRepository();
         repo.add(digitalTVContract);
         repo.add(internetContract);

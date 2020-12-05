@@ -1,7 +1,6 @@
 package study.anatoliy.netcracker.domain.contract;
 
 import study.anatoliy.netcracker.domain.client.Client;
-import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
 
@@ -44,7 +43,7 @@ public class DigitalTVContractBuilder {
         return this;
     }
 
-    public DigitalTVContract build() throws PeriodException {
+    public DigitalTVContract build() {
         return new DigitalTVContract(id, startDate, expirationDate, client, channelPackage);
     }
 }

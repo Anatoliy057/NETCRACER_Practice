@@ -1,7 +1,6 @@
 package study.anatoliy.netcracker.domain.contract;
 
 import study.anatoliy.netcracker.domain.client.Client;
-import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -22,7 +21,7 @@ public class DigitalTVContract extends Contract {
     /**
      * @see Contract#Contract(long, LocalDate, LocalDate, Client)
      */
-    public DigitalTVContract(long ID, LocalDate startDate, LocalDate expirationDate, Client client, ChannelPackage channelPackage) throws PeriodException {
+    public DigitalTVContract(long ID, LocalDate startDate, LocalDate expirationDate, Client client, ChannelPackage channelPackage) {
         super(ID, startDate, expirationDate, client);
         this.channelPackage = Objects.requireNonNull(channelPackage);
     }

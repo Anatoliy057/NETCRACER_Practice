@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import study.anatoliy.netcracker.repository.ContractAlreadyExistsException;
+import study.anatoliy.netcracker.parser.ContractParser;
+import study.anatoliy.netcracker.domain.exception.ContractAlreadyExistsException;
 import study.anatoliy.netcracker.repository.ContractRepository;
 
 import static org.mockito.Mockito.*;

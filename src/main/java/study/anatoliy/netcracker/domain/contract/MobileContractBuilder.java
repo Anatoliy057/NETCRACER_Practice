@@ -1,7 +1,6 @@
 package study.anatoliy.netcracker.domain.contract;
 
 import study.anatoliy.netcracker.domain.client.Client;
-import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
 
@@ -56,7 +55,7 @@ public class MobileContractBuilder {
         return this;
     }
 
-    public MobileContract build() throws PeriodException {
+    public MobileContract build() {
         return new MobileContract(id, startDate, expirationDate, client, minutes, sms, megabytes);
     }
 }

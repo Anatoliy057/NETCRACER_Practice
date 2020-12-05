@@ -1,7 +1,6 @@
 package study.anatoliy.netcracker.domain.contract;
 
 import study.anatoliy.netcracker.domain.client.Client;
-import study.anatoliy.netcracker.domain.exception.PeriodException;
 
 import java.time.LocalDate;
 
@@ -44,7 +43,7 @@ public class InternetContractBuilder {
         return this;
     }
 
-    public InternetContract build() throws PeriodException {
+    public InternetContract build() {
         return new InternetContract(id, startDate, expirationDate, client, megabits);
     }
 }

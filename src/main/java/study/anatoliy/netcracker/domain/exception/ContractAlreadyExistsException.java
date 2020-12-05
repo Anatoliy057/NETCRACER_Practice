@@ -1,6 +1,7 @@
-package study.anatoliy.netcracker.repository;
+package study.anatoliy.netcracker.domain.exception;
 
 import study.anatoliy.netcracker.domain.contract.Contract;
+import study.anatoliy.netcracker.repository.ContractRepository;
 
 import java.util.Collection;
 

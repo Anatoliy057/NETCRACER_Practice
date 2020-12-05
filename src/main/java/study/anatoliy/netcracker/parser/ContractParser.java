@@ -1,4 +1,4 @@
-package study.anatoliy.netcracker.util;
+package study.anatoliy.netcracker.parser;
 
 import com.opencsv.CSVReader;
 import org.slf4j.Logger;
@@ -7,9 +7,12 @@ import study.anatoliy.netcracker.domain.client.Client;
 import study.anatoliy.netcracker.domain.client.ClientBuilder;
 import study.anatoliy.netcracker.domain.client.Gender;
 import study.anatoliy.netcracker.domain.contract.*;
-import study.anatoliy.netcracker.domain.exception.PeriodException;
-import study.anatoliy.netcracker.repository.ContractAlreadyExistsException;
+import study.anatoliy.netcracker.domain.exception.ContractAlreadyExistsException;
+import study.anatoliy.netcracker.domain.validation.ValidationMessage;
+import study.anatoliy.netcracker.domain.validation.ValidationStatus;
 import study.anatoliy.netcracker.repository.ContractRepository;
+import study.anatoliy.netcracker.validators.ClientValidator;
+import study.anatoliy.netcracker.validators.ContractValidator;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static study.anatoliy.netcracker.domain.validation.ValidationStatus.*;
+
 /**
  * Parsing contracts in csv format to the repository
  *
@@ -28,6 +33,9 @@ import java.util.Optional;
 public class ContractParser {
 
     private final Logger logger = LoggerFactory.getLogger(ContractParser.class);
+
+    private ClientValidator clientValidator = ClientValidator.getInstance();
+    private ContractValidator contractValidator = ContractValidator.getInstance();
 
     /** Number arguments of row */
     private final static int SIZE_COLUMNS = 10;
@@ -86,7 +94,6 @@ public class ContractParser {
 
             try {
                 Client client;
-                try {
                     client = new ClientBuilder()
                             .setID(Long.parseLong(line[4]))
                             .setBirthDate(LocalDate.parse(line[5]))
@@ -105,12 +112,12 @@ public class ContractParser {
                             continue;
                         }
                     } else {
+                        if (validClient(index, client).compareTo(ERROR) <= 0) {
+                            continue;
+                        }
+
                         ClientCache.put(client);
                     }
-                } catch (PeriodException e) {
-                    logger.error("Client initialization error at line " + index, e);
-                    continue;
-                }
 
                 Contract contract = null;
                 try {
@@ -146,11 +153,11 @@ public class ContractParser {
                                 .build();
                     }
 
+                    if (validContract(index, contract).compareTo(ERROR) <= 0) {
+                        continue;
+                    }
+
                     repo.add(contract);
-
-                } catch (PeriodException | IllegalArgumentException e) {
-                    logger.error("Contract initialization error at line " + index, e);
-
                 } catch (ContractAlreadyExistsException e) {
                     logger.error("Can't add contract " + index, e);
                 }
@@ -160,9 +167,41 @@ public class ContractParser {
         }
     }
 
+    private ValidationStatus validClient(int index, Client client) {
+        ValidationStatus status = ValidationStatus.SUCCESSFUL;
+        for (ValidationMessage message :
+                clientValidator.doValidation(client)) {
+            logValidationMessage(index, message);
+
+            status = status.compareTo(message.getStatus()) > 0 ? status : message.getStatus();
+        }
+
+        return status;
+    }
+
+    private ValidationStatus validContract(int index, Contract contract) {
+        ValidationStatus status = ValidationStatus.SUCCESSFUL;
+        for (ValidationMessage message :
+                contractValidator.doValidation(contract)) {
+            logValidationMessage(index, message);
+
+            status = status.compareTo(message.getStatus()) < 0 ? status : message.getStatus();
+        }
+
+        return status;
+    }
+
+    private void logValidationMessage(int index, ValidationMessage message) {
+        if (message.getStatus() == ValidationStatus.ERROR) {
+            logger.error(String.format("Error valid at %d, cause: %s", index, message.getMessage()));
+        } else if (message.getStatus() == ValidationStatus.WARN) {
+            logger.warn(String.format("Warning valid at %d, cause: %s", index, message.getMessage()));
+        }
+    }
+
     private static class ClientCache {
 
-        private static Map<Long, Client> cache = new HashMap<>();
+        private static final Map<Long, Client> cache = new HashMap<>();
 
         private static Optional<Client> get(long id) {
             return Optional.ofNullable(cache.get(id));

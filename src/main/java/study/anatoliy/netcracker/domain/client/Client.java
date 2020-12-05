@@ -1,8 +1,5 @@
 package study.anatoliy.netcracker.domain.client;
 
-import study.anatoliy.netcracker.domain.exception.PeriodException;
-import study.anatoliy.netcracker.util.Utils;
-
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
@@ -27,20 +24,14 @@ public class Client {
     private Gender gender;
 
     /**
-     * @throws PeriodException if the client's date of birth is later than the current date
-     * @throws IllegalArgumentException if id of client < 0
      * @throws NullPointerException if one of the parameters is null
      */
-    public Client(long id, LocalDate birthDate, String fullName, String passport, Gender gender) throws PeriodException {
-        if (id < 0) {
-            throw new IllegalArgumentException("ID can not be negative: " + id);
-        }
+    public Client(long id, LocalDate birthDate, String fullName, String passport, Gender gender) {
         this.id = id;
         this.birthDate = Objects.requireNonNull(birthDate);
         this.fullName = Objects.requireNonNull(fullName);
         this.passport = Objects.requireNonNull(passport);
         this.gender = Objects.requireNonNull(gender);
-        checkBirth();
     }
 
 
@@ -81,11 +72,6 @@ public class Client {
 
     public void setGender(Gender gender) {
         this.gender = gender;
-    }
-
-    private void checkBirth() throws PeriodException {
-        Utils.periodMoreZero(birthDate, LocalDate.now(), "Client cannot be born later than current date");
-        Utils.periodMoreZero(LocalDate.now().minusYears(130), birthDate, "Client's age exceeds 130 years");
     }
 
     @Override

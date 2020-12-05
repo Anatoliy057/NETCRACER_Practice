@@ -1,4 +1,4 @@
-package study.anatoliy.netcracker.util;
+package study.anatoliy.netcracker.util.sort;
 
 import java.util.Comparator;
 import java.util.List;

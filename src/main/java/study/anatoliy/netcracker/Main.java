@@ -1,7 +1,10 @@
 package study.anatoliy.netcracker;
 
+import study.anatoliy.netcracker.domain.contract.Contract;
 import study.anatoliy.netcracker.repository.ContractRepository;
-import study.anatoliy.netcracker.util.ContractParser;
+import study.anatoliy.netcracker.parser.ContractParser;
+
+import java.util.Comparator;
 
 public class Main {
 

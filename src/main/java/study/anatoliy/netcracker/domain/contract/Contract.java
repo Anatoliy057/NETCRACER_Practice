@@ -1,8 +1,6 @@
 package study.anatoliy.netcracker.domain.contract;
 
 import study.anatoliy.netcracker.domain.client.Client;
-import study.anatoliy.netcracker.domain.exception.PeriodException;
-import study.anatoliy.netcracker.util.Utils;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -29,19 +27,13 @@ public abstract class Contract {
     protected final Client client;
 
     /**
-     * @throws PeriodException if the start date of the contract is later than its end
-     * @throws PeriodException if the client's date of birth is later than the start of the contract
-     * @throws IllegalArgumentException if id of contract < 0
      * @throws NullPointerException if one of the parameters (other than expirationDate) is null
      */
-    protected Contract(long id, LocalDate startDate, LocalDate expirationDate, Client client) throws PeriodException {
-        Utils.numberIsPositive(id, "ID can not be negative");
+    protected Contract(long id, LocalDate startDate, LocalDate expirationDate, Client client) {
         this.id = id;
         this.startDate = Objects.requireNonNull(startDate);
         this.expirationDate = expirationDate;
         this.client = Objects.requireNonNull(client);
-        checkPeriodContract();
-        checkBirthClient();
     }
 
     /**
@@ -69,17 +61,6 @@ public abstract class Contract {
 
     public Client getClient() {
         return client;
-    }
-
-    private void checkPeriodContract() throws PeriodException {
-        if (expirationDate == null) {
-            return;
-        }
-        Utils.periodMoreZero(startDate, expirationDate);
-    }
-
-    private void checkBirthClient() throws PeriodException {
-        Utils.periodMoreZero(client.getBirthDate(), startDate, "The client cannot conclude a contract because it does not exist yet");
     }
 
     @Override

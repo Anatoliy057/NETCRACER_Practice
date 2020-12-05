@@ -1,22 +1,12 @@
 package study.anatoliy.netcracker.util;
 
-import study.anatoliy.netcracker.domain.exception.PeriodException;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class Utils {
 
-    public static void periodMoreZero(LocalDate start, LocalDate end) throws PeriodException {
-        if (start.isAfter(end)) {
-            throw new PeriodException(start, end);
-        }
-    }
-
-    public static void periodMoreZero(LocalDate start, LocalDate end, String msg) throws PeriodException {
-        if (start.isAfter(end)) {
-            throw new PeriodException(start, end, msg);
-        }
+    public static boolean periodMoreZero(LocalDate start, LocalDate end) {
+        return start.isAfter(end);
     }
 
     public static void numberIsPositive(long n, String msg) {
