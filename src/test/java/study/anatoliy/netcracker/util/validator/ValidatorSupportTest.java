@@ -13,7 +13,7 @@ class ValidatorSupportTest {
         class A {}
         class B extends A {}
 
-        Validator<A> validator = ValidatorSupport.of(A.class, o -> Collections.emptyList());
+        Validator validator = ValidatorSupport.of(A.class, o -> Collections.emptyList());
 
         assertTrue(validator.isSuitableClass(B.class));
     }

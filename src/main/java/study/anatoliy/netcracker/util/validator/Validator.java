@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author Udarczev Anatoliy
  */
-public interface Validator<T> {
+public interface Validator {
 
     /**
      * Validation without checking the class of the object being viewed
@@ -22,7 +22,7 @@ public interface Validator<T> {
      * @param o validated object
      * @return collection of validation messages
      */
-    List<ValidationMessage> doValidate(T o);
+    List<ValidationMessage> doValidate(Object o);
 
     /**
      * Before validation, it checks the compliance of the object with the specified class,
@@ -31,7 +31,7 @@ public interface Validator<T> {
      * @param o validated object
      * @return collection of validation messages
      */
-    default List<ValidationMessage> valid(T o) {
+    default List<ValidationMessage> valid(Object o) {
         return isSuitableClass(o.getClass()) ? doValidate(o) : Collections.emptyList();
     }
 
@@ -48,5 +48,5 @@ public interface Validator<T> {
      *
      * @return class type that can be validated
      */
-    Class<? extends T> getClassValidObject();
+    Class<?> getClassValidObject();
 }

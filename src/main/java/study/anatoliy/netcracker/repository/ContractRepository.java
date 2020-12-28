@@ -4,6 +4,7 @@ import study.anatoliy.netcracker.domain.contract.Contract;
 import study.anatoliy.netcracker.domain.contract.TypeContract;
 import study.anatoliy.netcracker.domain.exception.ContractAlreadyExistsException;
 import study.anatoliy.netcracker.util.*;
+import study.anatoliy.netcracker.util.inject.Inject;
 import study.anatoliy.netcracker.util.sort.ISorter;
 import study.anatoliy.netcracker.util.sort.Sorters;
 import study.anatoliy.netcracker.util.sort.TypeSorter;
@@ -33,29 +34,19 @@ public class ContractRepository {
     /** Number of stored contracts */
     private int size;
     /** sorting algorithm */
+    @Inject
     private ISorter sorter;
 
     /**
      * @param capacity estimated number of stored contracts
-     * @param sorter the algorithm by which the sorting will be carried out
      * @throws IllegalArgumentException if capacity > 0
      * @throws NullPointerException if sorter is null
      */
-    public ContractRepository(int capacity, ISorter sorter) {
-        Objects.requireNonNull(sorter);
+    public ContractRepository(int capacity) {
         Utils.numberIsPositive(capacity, "Capacity must be > 0");
         contracts = new Contract[capacity];
         size = 0;
         ids = new HashSet<>();
-        this.sorter = sorter;
-    }
-
-    /**
-     * @param capacity estimated number of stored contracts
-     * @see ContractRepository#ContractRepository(int, ISorter) where type of sorter is QUICK
-     */
-    public ContractRepository(int capacity) {
-        this(capacity, Sorters.get(TypeSorter.QUICK));
     }
 
     /**

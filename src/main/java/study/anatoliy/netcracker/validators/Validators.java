@@ -6,6 +6,7 @@ import study.anatoliy.netcracker.domain.contract.InternetContract;
 import study.anatoliy.netcracker.domain.contract.MobileContract;
 import study.anatoliy.netcracker.domain.validation.ValidationMessage;
 import study.anatoliy.netcracker.util.Utils;
+import study.anatoliy.netcracker.util.inject.bean.Bean;
 import study.anatoliy.netcracker.util.validator.Validator;
 import study.anatoliy.netcracker.util.validator.ValidatorSupport;
 
@@ -29,7 +30,8 @@ public class Validators {
      *
      * @return client validator
      */
-    static Validator<Client> validatorBirthDateClient() {
+    @Bean
+    public static Validator validatorBirthDateClient() {
         return ValidatorSupport.of(Client.class,
                 client -> {
                     List<ValidationMessage> messages = new ArrayList<>();
@@ -51,7 +53,8 @@ public class Validators {
      *
      * @return client validator
      */
-    static Validator<Client> validatorIdClient() {
+    @Bean
+    public static Validator validatorIdClient() {
         return ValidatorSupport.of(Client.class,
                 client -> {
                     if (client.getId() < 0) {
@@ -67,7 +70,8 @@ public class Validators {
      *
      * @return contract validator
      */
-    static Validator<Contract> validatorIdContract() {
+    @Bean
+    public static Validator validatorIdContract() {
         return ValidatorSupport.of(Contract.class,
                 contract -> {
                     if (contract.getId() < 0) {
@@ -83,7 +87,8 @@ public class Validators {
      *
      * @return contract validator
      */
-    static Validator<Contract> validatorDatesContract() {
+    @Bean
+    public static Validator validatorDatesContract() {
         return ValidatorSupport.of(Contract.class,
                 contract -> {
                     List<ValidationMessage> messages = new ArrayList<>();
@@ -105,7 +110,8 @@ public class Validators {
      *
      * @return contract validator
      */
-    static Validator<Contract> validatorInternetContract() {
+    @Bean
+    public static Validator validatorInternetContract() {
         return ValidatorSupport.of(InternetContract.class,
                 contract -> {
                     InternetContract internetContract = (InternetContract) contract;
@@ -123,7 +129,8 @@ public class Validators {
      *
      * @return contract validator
      */
-    static Validator<Contract> validatorMobileContract() {
+    @Bean
+    public static Validator validatorMobileContract() {
         return ValidatorSupport.of(MobileContract.class,
                 contract -> {
                     MobileContract mobileContract = (MobileContract) contract;

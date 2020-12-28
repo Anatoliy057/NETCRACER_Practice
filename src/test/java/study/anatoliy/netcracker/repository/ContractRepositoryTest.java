@@ -6,6 +6,7 @@ import study.anatoliy.netcracker.domain.client.ClientBuilder;
 import study.anatoliy.netcracker.domain.client.Gender;
 import study.anatoliy.netcracker.domain.contract.*;
 import study.anatoliy.netcracker.domain.exception.ContractAlreadyExistsException;
+import study.anatoliy.netcracker.util.sort.Sorters;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -220,6 +221,7 @@ class ContractRepositoryTest {
     @Test
     public void getAllOrderBy_startDate_returnSortedByDate() throws ContractAlreadyExistsException {
         ContractRepository repo = new ContractRepository();
+        repo.setSorter(Sorters.getQuickSorter());
         repo.add(digitalTVContract);
         repo.add(internetContract);
         repo.add(mobileContract);

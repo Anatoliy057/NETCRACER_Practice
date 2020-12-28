@@ -24,11 +24,11 @@ public class ValidatorSupport {
      * @param <T> type of the object being validated
      * @return validator
      */
-    public static <T> Validator<T> of(Class<? extends T> clazz, Function<T, List<ValidationMessage>> f) {
-        return new Validator<T>() {
+    public static <T> Validator of(Class<? extends T> clazz, Function<T, List<ValidationMessage>> f) {
+        return new Validator() {
             @Override
-            public List<ValidationMessage> doValidate(T o) {
-                return f.apply(o);
+            public List<ValidationMessage> doValidate(Object o) {
+                return f.apply((T) o);
             }
 
             @Override
@@ -48,12 +48,11 @@ public class ValidatorSupport {
      *
      * @param o validated object
      * @param validators validators collection
-     * @param <T> type validated object
      * @return collection of validation messages
      */
-    public static <T> List<ValidationMessage> doValidation(T o, Collection<Validator<T>> validators) {
+    public static List<ValidationMessage> doValidation(Object o, Collection<Validator> validators) {
         List<ValidationMessage> messages = new ArrayList<>();
-        for (Validator<T> validator:
+        for (Validator validator:
                 validators) {
             messages.addAll(validator.valid(o));
         }

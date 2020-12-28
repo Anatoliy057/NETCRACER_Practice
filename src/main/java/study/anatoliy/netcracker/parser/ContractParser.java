@@ -11,8 +11,8 @@ import study.anatoliy.netcracker.domain.exception.ContractAlreadyExistsException
 import study.anatoliy.netcracker.domain.validation.ValidationMessage;
 import study.anatoliy.netcracker.domain.validation.ValidationStatus;
 import study.anatoliy.netcracker.repository.ContractRepository;
-import study.anatoliy.netcracker.validators.ClientValidator;
-import study.anatoliy.netcracker.validators.ContractValidator;
+import study.anatoliy.netcracker.util.inject.InjectCollection;
+import study.anatoliy.netcracker.util.validator.Validator;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,8 +35,8 @@ public class ContractParser {
 
     private final Logger logger = LoggerFactory.getLogger(ContractParser.class);
 
-    private ClientValidator clientValidator = ClientValidator.getInstance();
-    private ContractValidator contractValidator = ContractValidator.getInstance();
+    @InjectCollection
+    private List<Validator> validators;
 
     /** Number arguments of row */
     private final static int SIZE_COLUMNS = 10;
@@ -112,7 +113,7 @@ public class ContractParser {
                             continue;
                         }
                     } else {
-                        if (validClient(index, client).compareTo(ERROR) <= 0) {
+                        if (valid(index, client).compareTo(ERROR) <= 0) {
                             continue;
                         }
 
@@ -153,7 +154,7 @@ public class ContractParser {
                                 .build();
                     }
 
-                    if (validContract(index, contract).compareTo(ERROR) <= 0) {
+                    if (valid(index, contract).compareTo(ERROR) <= 0) {
                         continue;
                     }
 
@@ -168,38 +169,22 @@ public class ContractParser {
     }
 
     /**
-     * Makes client validation for all validators
+     * Makes object validation for all validators
      *
      * @param index parsed line number
-     * @param client validated client
+     * @param validated validation object
      * @return Overall validation status (highest)
      */
-    private ValidationStatus validClient(int index, Client client) {
+    private ValidationStatus valid(int index, Object validated) {
         ValidationStatus status = ValidationStatus.SUCCESSFUL;
-        for (ValidationMessage message :
-                clientValidator.doValidation(client)) {
-            logValidationMessage(index, message);
+        for (Validator v :
+                validators) {
+            for (ValidationMessage message :
+                    v.valid(validated)) {
+                logValidationMessage(index, message);
 
-            status = status.compareTo(message.getStatus()) > 0 ? status : message.getStatus();
-        }
-
-        return status;
-    }
-
-    /**
-     * Makes contract validation for all validators
-     *
-     * @param index parsed line number
-     * @param contract validated contract
-     * @return Overall validation status (highest)
-     */
-    private ValidationStatus validContract(int index, Contract contract) {
-        ValidationStatus status = ValidationStatus.SUCCESSFUL;
-        for (ValidationMessage message :
-                contractValidator.doValidation(contract)) {
-            logValidationMessage(index, message);
-
-            status = status.compareTo(message.getStatus()) < 0 ? status : message.getStatus();
+                status = status.compareTo(message.getStatus()) < 0 ? status : message.getStatus();
+            }
         }
 
         return status;
@@ -217,6 +202,14 @@ public class ContractParser {
         } else if (message.getStatus() == ValidationStatus.WARN) {
             logger.warn(String.format("Warning valid at %d, cause: %s", index, message.getMessage()));
         }
+    }
+
+    public List<Validator> getValidators() {
+        return validators;
+    }
+
+    public void setValidators(List<Validator> validators) {
+        this.validators = validators;
     }
 
     private static class ClientCache {

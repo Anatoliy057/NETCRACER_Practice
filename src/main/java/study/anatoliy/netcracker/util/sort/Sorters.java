@@ -1,5 +1,7 @@
 package study.anatoliy.netcracker.util.sort;
 
+import study.anatoliy.netcracker.util.inject.bean.Bean;
+
 import java.util.EnumMap;
 import java.util.Objects;
 
@@ -38,5 +40,14 @@ public class Sorters {
     public static ISorter get(TypeSorter t) {
         Objects.requireNonNull(t);
         return cache.get(t);
+    }
+
+    @Bean
+    public static ISorter getQuickSorter() {
+        return (QuickSorter) cache.get(TypeSorter.QUICK);
+    }
+
+    public static ISorter getBubbleSorter() {
+        return (BubbleSorter) cache.get(TypeSorter.BUBBLE);
     }
 }
