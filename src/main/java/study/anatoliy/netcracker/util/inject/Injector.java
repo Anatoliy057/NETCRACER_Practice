@@ -54,7 +54,7 @@ public class Injector {
      *
      * @throws SyntaxBeanException if using the Bean annotation incorrectly
      */
-    private void scanClass(Class<?> clazz) throws SyntaxBeanException {
+    void scanClass(Class<?> clazz) throws SyntaxBeanException {
         Bean a = clazz.getAnnotation(Bean.class);
         if (a != null) {
             Constructor<?> finalFactory = getEmptyConstructor(clazz);
@@ -67,6 +67,7 @@ public class Injector {
                 }
                 return null;
             }));
+            beanFactory.put(clazz, factoryList);
         }
 
         Constructor<?> constructor = null;

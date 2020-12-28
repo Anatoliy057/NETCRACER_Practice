@@ -19,6 +19,6 @@ public class EachBeanFactory implements BeanFactory {
 
     @Override
     public Object factory() {
-        return factory;
+        return factory.get();
     }
 }
