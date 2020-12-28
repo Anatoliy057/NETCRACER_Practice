@@ -5,21 +5,39 @@ import study.anatoliy.netcracker.util.inject.bean.Bean;
 import study.anatoliy.netcracker.util.inject.bean.BeanFactories;
 import study.anatoliy.netcracker.util.inject.bean.BeanFactory;
 import study.anatoliy.netcracker.util.inject.bean.SyntaxBeanException;
-import study.anatoliy.netcracker.validators.Validators;
 
 import java.io.File;
 import java.lang.reflect.*;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Injector allows you to scan class packages for bean factories and inject them into objects
+ *
+ * @see Bean
+ * @see Inject
+ * @see InjectCollection
+ *
+ * @author Udarczev Anatoliy
+ */
 public class Injector {
 
-    private Map<Class<?>, List<BeanFactory>> beanFactory;
+    /**
+     * Map of the found bean factories according to the types of beans they generate
+     */
+    private final Map<Class<?>, List<BeanFactory>> beanFactory;
 
     public Injector() {
         beanFactory = new HashMap<>();
     }
 
+    /**
+     * Scans package for bean annotations and turns them into factories
+     *
+     * @param pkg scanned package
+     *
+     * @throws SyntaxBeanException using the Bean annotation incorrectly
+     */
     public void scan(String pkg) throws SyntaxBeanException {
         List<Class<?>> classes = find(pkg);
 
@@ -29,6 +47,13 @@ public class Injector {
         }
     }
 
+    /**
+     * Scans class for bean annotations and turns them into factories
+     *
+     * @param clazz scanned class
+     *
+     * @throws SyntaxBeanException if using the Bean annotation incorrectly
+     */
     private void scanClass(Class<?> clazz) throws SyntaxBeanException {
         Bean a = clazz.getAnnotation(Bean.class);
         if (a != null) {
@@ -95,6 +120,15 @@ public class Injector {
         }
     }
 
+    /**
+     * Trying to get empty constructor of given class
+     *
+     * @param clazz the constructor class
+     *
+     * @return empty constructor of given class
+     *
+     * @throws SyntaxBeanException if it is not possible to get an empty constructor
+     */
     private Constructor<?> getEmptyConstructor(Class<?> clazz) throws SyntaxBeanException {
         Constructor<?> factory = null;
         for (Constructor<?> constructor :
@@ -113,6 +147,14 @@ public class Injector {
         return factory;
     }
 
+    /**
+     * Injects beans into class fields with annotations Inject and InjectCollection
+     *
+     * @param o the object we want to inject beans into
+     *
+     * @throws InjectSyntaxException if using the Inject annotation incorrectly
+     * @throws InjectException if impossible to determine what to inject
+     */
     public void inject(Object o) throws InjectSyntaxException, InjectException {
         Class<?> clazz = o.getClass();
 
@@ -133,6 +175,17 @@ public class Injector {
         }
     }
 
+    /**
+     * Injects a bean into the field
+     *
+     * @param root the class of the object in which the injection takes place
+     * @param o the object in which the injection takes place
+     * @param field injecting field
+     * @param i inject annotation
+     *
+     * @throws InjectSyntaxException if using the inject annotation incorrectly
+     * @throws InjectException if impossible to determine what to inject
+     */
     private void injectFiled(Class<?> root, Object o, Field field, Inject i) throws InjectSyntaxException, InjectException {
         Class<?> fieldClass = field.getType();
         Class<?> injectedClass = i.value();
@@ -160,11 +213,21 @@ public class Injector {
         }
     }
 
+    /**
+     * Injects a beans into the field of type of collection
+     *
+     * @param root the class of the object in which the injection takes place
+     * @param o the object in which the injection takes place
+     * @param field injecting field
+     * @param ic inject collection annotation
+     *
+     * @throws InjectSyntaxException if using the inject annotation incorrectly
+     */
     private void injectCollection(Class<?> root, Object o, Field field, InjectCollection ic) throws InjectSyntaxException {
         Class<?> collectionClass = field.getType();
 
-        if (collectionClass.isAssignableFrom(Collection.class)){
-            throw new InjectSyntaxException("Class field is not sub of Collection at " + root.getName());
+        if (!collectionClass.equals(Collection.class)){
+            throw new InjectSyntaxException("Class field is not collection at " + root.getName());
         }
 
         Type t = field.getGenericType();
@@ -195,6 +258,12 @@ public class Injector {
 
     private static final String CLASS_FILE_SUFFIX = ".class";
 
+    /**
+     * Scans the package for java classes
+     *
+     * @param scannedPackage scanned package
+     * @return list of found classes
+     */
     static List<Class<?>> find(String scannedPackage) {
         String scannedPath = scannedPackage.replace(PKG_SEPARATOR, DIR_SEPARATOR);
         URL scannedUrl = Thread.currentThread().getContextClassLoader().getResource(scannedPath);
@@ -215,6 +284,12 @@ public class Injector {
         return classes;
     }
 
+
+    /**
+     * @param file the file to check for a directory or class
+     * @param scannedPackage scanned package
+     * @return list of found classes
+     */
     private static List<Class<?>> find(File file, String scannedPackage) {
         List<Class<?>> classes = new ArrayList<>();
         String resource = scannedPackage + PKG_SEPARATOR + file.getName();

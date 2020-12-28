@@ -1,9 +1,14 @@
 package study.anatoliy.netcracker.util.inject.bean;
 
-import study.anatoliy.netcracker.util.inject.bean.BeanFactory;
-
 import java.util.function.Supplier;
 
+/**
+ * A bean factory that creates a bean once time
+ *
+ * @see BeanFactory
+ *
+ * @author Udarczev Anatoliy
+ */
 public class SingletonBeanFactory implements BeanFactory {
 
     private Object instance;

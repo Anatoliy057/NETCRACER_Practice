@@ -19,10 +19,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static study.anatoliy.netcracker.domain.validation.ValidationStatus.*;
 
@@ -36,7 +33,7 @@ public class ContractParser {
     private final Logger logger = LoggerFactory.getLogger(ContractParser.class);
 
     @InjectCollection
-    private List<Validator> validators;
+    private Collection<Validator> validators;
 
     /** Number arguments of row */
     private final static int SIZE_COLUMNS = 10;
@@ -204,11 +201,11 @@ public class ContractParser {
         }
     }
 
-    public List<Validator> getValidators() {
+    public Collection<Validator> getValidators() {
         return validators;
     }
 
-    public void setValidators(List<Validator> validators) {
+    public void setValidators(Collection<Validator> validators) {
         this.validators = validators;
     }
 

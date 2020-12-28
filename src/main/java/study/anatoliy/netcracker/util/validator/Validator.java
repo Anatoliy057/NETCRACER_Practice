@@ -3,7 +3,6 @@ package study.anatoliy.netcracker.util.validator;
 import study.anatoliy.netcracker.domain.validation.ValidationMessage;
 import study.anatoliy.netcracker.validators.Validators;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
